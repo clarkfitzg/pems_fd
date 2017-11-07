@@ -11,4 +11,4 @@ web/cluster_fd.svg: plots.R data/station_cluster.csv
 	Rscript $<
 
 link:
-	cp -f ~/pems_fd/maps/* ~/public_html/fd
+	cp -f ~/pems_fd/web/* ~/public_html/fd
