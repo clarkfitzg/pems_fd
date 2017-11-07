@@ -64,26 +64,12 @@ fd$cluster = c2
 fd = fd[!is.na(fd$cluster), ]
 
 # What do the representative FD's look like?
-# These are the "median" cluster for each group. Whatever that means :)
-pam1$medoids
+message('These are the "median" cluster for each group. Whatever that means')
+print(pam1$medoids)
 
 cluster1 = fd[fd$station == as.integer(pam1$medoids[1]), ]
 
 cluster2 = fd[fd$station == as.integer(pam1$medoids[2]), ]
-
-svg("web/cluster_fd.svg")
-plot(c(0, 1), c(0, max(cluster1$lefty, cluster2$lefty)), type = "n"
-     , main = "Cluster medoids"
-     , xlab = "occupancy"
-     , ylab = "flow (veh / 30 sec)")
-plotfd(cluster1, lty = 2)
-plotfd(cluster2, lty = 1)
-legend("topright", legend = c("Cluster 1", "Cluster 2"), lty = c(2, 1))
-dev.off()
-
-# Cool!
-# The most obvious feature is that one function is concave while the other
-# is not.
 
 c2 = fd$cluster == 2
 

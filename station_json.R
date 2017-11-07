@@ -1,6 +1,8 @@
 library(RJSONIO)
 library(RColorBrewer)
 
+source("tools.R")
+
 station_cluster = read.csv("data/station_cluster.csv")
 
 #sapply(station_cluster, class)
@@ -23,17 +25,7 @@ station_cluster = merge(station_cluster
         , stations[, c("ID", "Latitude", "Longitude", "Type", "Lanes", "Dir", "Fwy")]
         )
 
-# Add the color in at this point
-display.brewer.all(colorblindFriendly = TRUE)
-
-nclust = length(unique(station_cluster$cluster))
-
-pal = RColorBrewer::brewer.pal(nclust, "Dark2")
-
-# Maybe just 2 colors, brewer.pal always gives 3
-pal = pal[1:nclust]
-
-station_cluster$color = pal[station_cluster$cluster]
+station_cluster$color = colors[station_cluster$cluster]
 
 
 jstation = toJSON(station_cluster, digits = 10)
