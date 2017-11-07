@@ -6,7 +6,8 @@ library(cluster)
 
 source("tools.R")
 
-d = read.table("data/fd_inner.txt")
+# Big file, I prefer to keep it out of git
+d = read.table("~/data/pems/fd_inner.txt")
 
 dm = as.matrix(d)
 
