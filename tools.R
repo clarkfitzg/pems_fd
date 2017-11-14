@@ -17,3 +17,9 @@ plotfd = function(row, ...)
 
 # Generated from RColorBrewer
 colors = c("#1B9E77", "#D95F02")
+
+# Trim quantiles
+qtrim = function(x, lower = 0.025, upper = 0.975)
+{
+    x[(quantile(x, lower) < x) & (x < quantile(x, upper))]
+}
