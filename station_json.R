@@ -27,6 +27,7 @@ station_cluster = merge(station_cluster
 
 station_cluster$color = colors[station_cluster$cluster]
 
+station_cluster$capacity = station_cluster$lefty * 2 * 60
 
 jstation = toJSON(station_cluster, digits = 10)
 

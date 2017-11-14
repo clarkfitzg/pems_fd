@@ -19,7 +19,7 @@ var xhttp = new XMLHttpRequest();
 var station;
 var lat_eps = 2e-3;
 var long_eps = 3e-3;
-var ndigs = 8;
+var ndigs = 6;
 
 function one_circle(i) {
     var lat = station.Latitude[i];
@@ -46,11 +46,12 @@ function one_circle(i) {
     var info = ["Cluster: " + station.cluster[i]
         , "ID: " + station.ID[i]
         , "Freeway: " + station.Fwy[i] + " " + station.Dir[i]
-        //, ""
-        //, "Free flow intercept: " + station.free_intercept[i].toFixed(ndigs)
-        //, "Free flow slope: " + station.free_slope[i].toFixed(ndigs)
-        //, "Congested intercept: " + station.congested_intercept[i].toFixed(ndigs)
-        //, "Congested slope: " + station.congested_slope[i].toFixed(ndigs)
+        , ""
+        , "Capacity: " + station.capacity[i].toFixed(ndigs)
+        , "Left slope: " + station.left_slope[i].toFixed(ndigs)
+        , "Mid slope: " + station.mid_slope[i].toFixed(ndigs)
+        , "Right slope: " + station.right_slope[i].toFixed(ndigs)
+        , "Right convex: " + station.right_convex[i]
         ];
 
     circle.bindPopup(info.join("<br>")).openPopup();

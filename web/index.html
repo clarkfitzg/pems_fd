@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" integrity="sha512-wcw6ts8Anuw10Mzh9Ytw4pylW8+NAD4ch3lqm9lzAsTxg0GFeJgoAtxuCLREZSC5lUXdVyo/7yfsqFjQ4S+aKw==" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js" integrity="sha512-mNqn2Wg7tSToJhvHcqfzLMU6J4mkOImSPTxVZAdo+lcPlk+GhZmYgACEe0x35K7YzW1zJ7XyJV/TT1MrdXvMcA==" crossorigin=""></script>
+</head>
+<body>
+<h1>PEMS stations fundamental diagrams</h1>
+<p>Clark Fitzgerald</p>
+<p>UC Davis</p>
+<p>Nov 2017</p>
+<p>This map shows traffic sensors colored based on the shape of their fundamental diagram. Zoom and click the points for more information.</p>
+<div id="mapid" style="width: 1000px; height: 800px;"></div>
+<script type="text/javascript" src="maps.js"></script>
+<h2>Fundamental Diagrams</h2>
+<p>The image below shows the medoid (average) shapes of the clusters. A few notes:</p>
+<ul>
+<li>Steeper slopes on the right hand side mean that traffic clears out faster</li>
+<li>The green line is concave while the orange one is not.</li>
+<li>Some regions are mostly orange, such as I 680 around San Ramon</li>
+<li>Other regions are mixed, such as the Bay Bridge connecting San Francisco and Oakland</li>
+</ul>
+<p><img src="cluster_fd.svg" alt="Representative Fundamental Diagrams" /></p>
+<p>The three separate lines come from fitting points in different regions: - Left line comes from (0, 0.1) - Center line comes from (0.2, 0.5) - Right line comes from (0.5, 1)</p>
+<p>I fit the lines using least squares subject to the constraints that the fundamental diagram must pass through (0, 0) and (1, 0). I ignored the points in the region (0.1, 0.2) because points vary widely in this region as the traffic transitions to a congested state.</p>
+<h2>Clustering</h2>
+<p>I used a kernel based method to cluster the stations. The kernel defining similarity between functions is the inner product between functions.</p>
+<h2>Computation</h2>
+<p>Computation currently consists of the following steps:</p>
+<ul>
+<li>Download 10 months of 30 second sensor data for the Bay Area from the <a href="http://pems.dot.ca.gov/">CalTrans Performance Measurement System</a> (PEMS) into Hadoop</li>
+<li>Use Hive with R to group data by station and fit the fundamental diagrams for each station</li>
+<li>Compute the kernel matrix between all fundamental diagrams using numerical integration (just for fun, it also has an analytic form).</li>
+</ul>
+</body>
+</html>

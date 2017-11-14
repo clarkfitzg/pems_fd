@@ -6,7 +6,7 @@ view: $(REPORT).html
 	python3 -m http.server 8000
 
 # $< references the first prerequisite
-$(REPORT).html : $(REPORT).md
+$(REPORT).html : $(REPORT).md maps.js
 	pandoc $< -s -o $@ --from markdown_strict -H header.html
 
 clean:
