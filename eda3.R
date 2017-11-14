@@ -48,7 +48,12 @@ for(i in 1:N){
 D = as.dist(1 - dcor)
 
 
+# Gets much worse as I increase the number of clusters, so it doesn't make
+# sense to have more clusters.
+
 pam1 = pam(D, 2)
+#plot(pam1)
+
 
 clusters = pam1$clustering
 
