@@ -1,6 +1,8 @@
 # Tue Nov 14 12:58:03 PST 2017
 # Following up on a couple things before meeting Michael
 
+source("tools.R")
+
 s = read.csv("data/station_cluster.csv")
 
 # Capacity in vehicles / hr

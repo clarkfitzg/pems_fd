@@ -13,6 +13,8 @@ fundamental diagram. Zoom and click the points for more information.
 
 <script type="text/javascript" src="maps.js"></script>
 
+## Fundamental Diagrams
+
 The image below shows the medoid (average) shapes of the clusters. A few
 notes:
 
@@ -24,32 +26,28 @@ notes:
 
 ![Representative Fundamental Diagrams](cluster_fd.svg)
 
+The three separate lines come from fitting points in different regions:
+- Left line comes from (0, 0.1)
+- Center line comes from (0.2, 0.5)
+- Right line comes from (0.5, 1)
 
-## Analysis
+I fit the lines using least squares subject to the constraints that the
+fundamental diagram must pass through (0, 0) and (1, 0).
+I ignored the points in the region (0.1, 0.2) because points vary widely
+in this region as the traffic transitions to a congested state.
 
-Analysis currently consists of the following steps:
+## Clustering
 
-First I downloaded 10 months of 30 second sensor data for the Bay Area from the
-[CalTrans Performance Measurement System](http://pems.dot.ca.gov/) (PEMS).
-I used 
+I used a kernel based method to cluster the stations. The kernel defining
+similarity between functions is the inner product between functions.
 
-  <li>Separate them into groups based on station. </li>
-  <li>Fit a (naive) fundamental diagram to the second lane of the freeway
-      by using two robust linear models for each station: One for data with
-      occupancy less than 0.15 and one for greater. This approximates
-      minimizing the L1 loss as in 
-      <a href="http://trrjournalonline.trb.org/doi/abs/10.3141/2260-06">Li and Zhang's 2011 paper</a>.
-  </li>
-  <li>Throw out on/off ramp stations and those with problems such as no
-      observations, excessive standard error, or positive congested slopes.
-      This reduces the number of stations from 3720 to 1438.</li>
-  <li>Then these 4 parameters: slope and intercept for congested and
-      uncongested, were used as the inputs to a kmeans clustering. I didn't
-  discover any reasonable clusters.</li>
-</ol>
+## Computation
 
-    <br>
-    <br>
-    The lines below come from the stations on I80 west of the Carquinez
-    Bridge and northeast of Hercules.
-    <
+Computation currently consists of the following steps:
+
+- Download 10 months of 30 second sensor data for the Bay Area from the
+[CalTrans Performance Measurement System](http://pems.dot.ca.gov/) (PEMS)
+into Hadoop
+- Use Hive with R to group data by station and fit the fundamental diagrams for each station
+- Compute the kernel matrix between all fundamental diagrams using
+  numerical integration (just for fun, it also has an analytic form).
