@@ -120,8 +120,5 @@ cuts = dyncut(d2$occupancy2, pts_per_bin = 200)
 # This seems to have worked :)
 # But it becomes noisy if I reduce the number of points per bin.
 pdf("station404401.pdf")
-
 plot_bins(d2, cuts)
-
 dev.off()
-
