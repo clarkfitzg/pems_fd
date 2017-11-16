@@ -59,11 +59,12 @@ plot(s)
 cp = 0.2
 breaks = unique(c(seq(from = 0, to = cp, by = 0.02), seq(from = cp, to = 1, by = 0.1)))
 
-plot_bins = function(breaks, ...)
+plot_bins = function(d, breaks, ...)
 {
-    d$grp = cut(d$occupancy2, breaks, right = FALSE)
-    means = tapply(d$flow2, d$grp, mean)
-    ci = tapply(d$flow2, d$grp, function(x) t.test(x)$conf.int)
+    grp = cut(d$occupancy2, breaks, right = FALSE)
+    groups = split(d$flow2, grp)
+    means = sapply(groups, mean)
+    ci = lapply(groups, function(x) t.test(x)$conf.int)
     ci = do.call(rbind, ci)
     bp = breaks[-length(breaks)] + diff(breaks) / 2
     # This looks reasonable. But I would prefer to adjust the bins based on the
@@ -74,7 +75,7 @@ plot_bins = function(breaks, ...)
     lines(bp, ci[, 2], lty = 2)
 }
 
-plot_bins(breaks)
+plot_bins(d, breaks)
 
 d2 = d[order(d$occupancy2), ]
 d2 = d2[d2$occupancy2 > 0, ]
@@ -84,47 +85,37 @@ tail(d2$occupancy2, n = 100)
 
 # If I want a certain number of points in each bin I can work backwards
 # from here.
-pts_per_bin = 10
-high_bin_cutoff = 0.5
-N = nrow(d2)
 
-eachq = pts_per_bin / N
-last_dynamic_quantile = mean(d2$occupancy2 < high_bin_cutoff)
-
-places = seq(from = last_dynamic_quantile, to = 1, by = eachq)
-
-qs = quantile(d2$occupancy2, places)
-
-
-breaks = seq(from = 0, to = high_bin_cutoff, by = 0.01)
-breaks = unique(c(breaks, qs))
 
 # A better way to do this is to specify a minimum bin width, ie. 0.01, and
 # then make sure the bins are at least this wide. We also make sure they
 # have a sufficient number of points.
 # This seems like a reasonable dynamic binning scheme.
+dyncut = function(x, pts_per_bin = 20, lower = 0, upper = 1, min_bin_width = 0.01)
+{
+    N = length(x)
 
-min_bin_width = 0.01
+    max_num_cuts = ceiling(1 / min_bin_width)
 
-
-max_num_cuts = ceiling(1 / min_bin_width)
-
-possible_cuts = quantile(d2$occupancy2, probs = seq(from = 0, to = 1, by = eachq))
-cuts = rep(NA, max_num_cuts)
-current_cut = 0
-for(i in seq_along(cuts)){
-    # Find the first possible cuts that is at least min_bin_width away from
-    # the current cut
-    possible_cuts = possible_cuts[possible_cuts > current_cut + min_bin_width]
-    if(length(possible_cuts) == 0) 
-        break
-    current_cut = possible_cuts[1]
-    cuts[i] = current_cut
+    possible_cuts = quantile(x, probs = seq(from = 0, to = 1, by = eachq))
+    cuts = rep(NA, max_num_cuts)
+    current_cut = lower
+    for(i in seq_along(cuts)){
+        # Find the first possible cuts that is at least min_bin_width away from
+        # the current cut
+        possible_cuts = possible_cuts[possible_cuts > current_cut + min_bin_width]
+        if(length(possible_cuts) == 0) 
+            break
+        current_cut = possible_cuts[1]
+        cuts[i] = current_cut
+    }
+    cuts = cuts[!is.na(cuts)]
+    c(lower, cuts, upper)
 }
-cuts = cuts[!is.na(cuts)]
-cuts = c(0, cuts, 1)
+
+cuts = dyncut(d2$occupancy2, pts_per_bin = 100)
 
 # This seems to have worked :)
 # But it's pretty noisy as is
-plot_bins(cuts)
+plot_bins(d2, cuts)
 
