@@ -3,7 +3,8 @@
 # Attempting to find peak flow by finding all areas where the occupancy
 # increases, say from 0.1 to 0.3. Flow should increase then decrease.
 
-d = read.csv("~/data/pems/401395.csv", row.names = NULL)
+d = read.csv("~/data/pems/404401.csv", row.names = NULL)
+#d = read.csv("~/data/pems/401395.csv", row.names = NULL)
 # Drop row names
 d = d[, -1]
 d$timestamp = as.POSIXct(d$timestamp, format = "%Y-%m-%d %H:%M:%S")
@@ -93,6 +94,7 @@ tail(d2$occupancy2, n = 100)
 # This seems like a reasonable dynamic binning scheme.
 dyncut = function(x, pts_per_bin = 20, lower = 0, upper = 1, min_bin_width = 0.01)
 {
+    x = x[x < upper]
     N = length(x)
     max_num_cuts = ceiling(upper / min_bin_width)
     eachq = pts_per_bin / N
@@ -103,7 +105,7 @@ dyncut = function(x, pts_per_bin = 20, lower = 0, upper = 1, min_bin_width = 0.0
     for(i in seq_along(cuts)){
         # Find the first possible cuts that is at least min_bin_width away from
         # the current cut
-        possible_cuts = possible_cuts[possible_cuts > current_cut + min_bin_width]
+        possible_cuts = possible_cuts[possible_cuts >= current_cut + min_bin_width]
         if(length(possible_cuts) == 0) 
             break
         current_cut = possible_cuts[1]
@@ -116,6 +118,10 @@ dyncut = function(x, pts_per_bin = 20, lower = 0, upper = 1, min_bin_width = 0.0
 cuts = dyncut(d2$occupancy2, pts_per_bin = 200)
 
 # This seems to have worked :)
-# But it's pretty noisy as is
+# But it becomes noisy if I reduce the number of points per bin.
+pdf("station404401.pdf")
+
 plot_bins(d2, cuts)
+
+dev.off()
 
