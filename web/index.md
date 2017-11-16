@@ -1,10 +1,13 @@
 # PEMS stations fundamental diagrams
 
-Clark Fitzgerald
+Clark Fitzgerald (Statistics), Professor Michael Zhang (Civil Engineering)
 
 UC Davis
 
 Nov 2017
+
+This is a brief set of working notes for a project analyzing highway
+traffic sensor data. 
 
 This map shows traffic sensors colored based on the shape of their
 fundamental diagram. Zoom and click the points for more information.
