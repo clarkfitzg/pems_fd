@@ -70,7 +70,7 @@ plot_bins = function(d, breaks, ...)
     # This looks reasonable. But I would prefer to adjust the bins based on the
     # amount of data available in that area, ie. there may be very few
     # observations inside (0.7, 0.8)
-    plot(bp, means, type = "l")
+    plot(c(0, bp, 1), c(0, means, 0), type = "l")
     lines(bp, ci[, 1], lty = 2)
     lines(bp, ci[, 2], lty = 2)
 }
@@ -94,8 +94,8 @@ tail(d2$occupancy2, n = 100)
 dyncut = function(x, pts_per_bin = 20, lower = 0, upper = 1, min_bin_width = 0.01)
 {
     N = length(x)
-
-    max_num_cuts = ceiling(1 / min_bin_width)
+    max_num_cuts = ceiling(upper / min_bin_width)
+    eachq = pts_per_bin / N
 
     possible_cuts = quantile(x, probs = seq(from = 0, to = 1, by = eachq))
     cuts = rep(NA, max_num_cuts)
@@ -113,7 +113,7 @@ dyncut = function(x, pts_per_bin = 20, lower = 0, upper = 1, min_bin_width = 0.0
     c(lower, cuts, upper)
 }
 
-cuts = dyncut(d2$occupancy2, pts_per_bin = 100)
+cuts = dyncut(d2$occupancy2, pts_per_bin = 200)
 
 # This seems to have worked :)
 # But it's pretty noisy as is
