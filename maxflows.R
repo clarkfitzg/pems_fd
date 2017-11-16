@@ -6,7 +6,6 @@
 d = read.csv("~/data/pems/401395.csv", row.names = NULL)
 # Drop row names
 d = d[, -1]
-
 d$timestamp = as.POSIXct(d$timestamp, format = "%Y-%m-%d %H:%M:%S")
 
 # Check that it's sorted
@@ -29,6 +28,7 @@ congest = d[seq(from = start - nbr, to = start + nbr), ]
 
 # In the top right plot the data hovers around 0.1 before it hits the
 # congested state
+pdf("congestion_event.pdf")
 par(mfrow = c(3, 2))
 with(congest, {
      plot(timestamp, occupancy1, type = "l")
@@ -40,7 +40,40 @@ with(congest, {
      plot(timestamp, speed1, type = "l")
      plot(timestamp, speed2, type = "l")
 })
+dev.off()
 
 # What does a smoother look like on the whole data? This actually gives us
 # far more freedom versus the triangular or piecewise linear one. And it's
-# amenable to the clustering technique we have.
+# amenable to the clustering technique I'm already using.
+
+s = smooth.spline(d$occupancy2, d$flow2, nknots = 5)
+
+plot(s)
+
+# Memory use quadratic in n - BAD!
+#l = loess(flow2 ~ occupancy2, d)
+
+# What if we just bin it and take the means?
+# Then if we claim it's continuous we can just linearly interpolate.
+
+cp = 0.2
+breaks = unique(c(seq(from = 0, to = cp, by = 0.02), seq(from = cp, to = 1, by = 0.1)))
+
+d$grp = cut(d$occupancy2, breaks)
+
+means = tapply(d$flow2, d$grp, mean)
+
+ci = tapply(d$flow2, d$grp, function(x) t.test(x)$conf.int)
+
+ci = do.call(rbind, ci)
+
+bp = breaks[-length(breaks)] + diff(breaks) / 2
+
+# This looks reasonable. But I would prefer to adjust the bins based on the
+# amount of data available in that area, ie. there may be very few
+# observations inside (0.7, 0.8)
+plot(bp, means, type = "l")
+lines(bp, ci[, 1], lty = 2)
+lines(bp, ci[, 2], lty = 2)
+
+
