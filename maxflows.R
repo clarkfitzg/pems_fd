@@ -7,6 +7,7 @@ d = read.csv("~/data/pems/404401.csv", row.names = NULL)
 #d = read.csv("~/data/pems/401395.csv", row.names = NULL)
 # Drop row names
 d = d[, -1]
+
 d$timestamp = as.POSIXct(d$timestamp, format = "%Y-%m-%d %H:%M:%S")
 
 # Check that it's sorted
