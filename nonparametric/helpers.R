@@ -23,13 +23,39 @@ inner_one_piece = function(a, b, fa, fb, ga, gb)
 piecewise_inner = function(x1, y1, x2, y2)
 {
     x = sort(unique(c(x1, x2)))
-    f = approx(x1, y1, xout = d$x)$y
-    g = approx(x2, y2, xout = d$x)$y
+    f = approx(x1, y1, xout = x)$y
+    g = approx(x2, y2, xout = x)$y
 
-    parts = rep(NA, nrow(d) - 1)
-    for(i in seq(nrow(d) - 1)){
+    nm1 = length(x) - 1
+    parts = rep(NA, nm1)
+    for(i in seq(nm1)){
         ip1 = i + 1
         parts[i] = inner_one_piece(x[i], x[ip1], f[i], f[ip1], g[i], g[ip1])
     }
     sum(parts)
 }
+
+
+scale_to_cor = function
+
+# Scaling a similarity matrix into a correlation matrix
+dcor = dm
+N = nrow(dm)
+# This is a nice use case for when a for loop is easy to write, but an
+# apply function would be awkward.
+# I didn't know why I was getting NA's, so I wanted to stop and check when
+# it occurs.
+for(i in 1:N){
+    for(j in 1:N){
+        dij = dm[i, j] / sqrt(dm[i, i] * dm[j, j])
+        if(is.na(dij)) stop()
+        dcor[i, j] = dij
+    }
+}
+
+# Becomes a measure of dissimilarity
+# Is it a metric? Only thing to verify is the triangle inequality
+# Started to try this on paper, could come back if I feel like it.
+D = as.dist(1 - dcor)
+
+
