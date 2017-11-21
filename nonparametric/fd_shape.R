@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
-# 
-# Automatically generated from R by RHive version 
+# 2017-11-21 08:46:20
+# Automatically generated from R by RHive version 0.0.1
 
 # These values are specific to the analysis
 verbose = FALSE
@@ -20,7 +20,6 @@ f = function (x)
         right_end_occ = breaks[-1], mean_flow = sapply(groups, 
             mean), sd_flow = sapply(groups, sd), number_observed = sapply(groups, 
             length))
-    # TODO:
     out
 }
 
@@ -70,7 +69,6 @@ msg = function(..., log = verbose)
 multiple_groups = function(queue, g = cluster_by) length(unique(queue[, g])) > 1
 
 
-# TODO: Change .try in template and add to .gitignore
 process_group = function(grp, outfile, .try = try)
 {
     msg("Processing group", grp[1, cluster_by])
