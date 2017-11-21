@@ -5,8 +5,8 @@ library(RHive)
 npbin = function(x)
 {
     breaks = dyncut(x$occupancy2, pts_per_bin = 200)
-    binned = cut(d$occupancy2, breaks, right = FALSE)
-    groups = split(d$flow2, binned)
+    binned = cut(x$occupancy2, breaks, right = FALSE)
+    groups = split(x$flow2, binned)
 
     out = data.frame(station = rep(x[1, "station"], length(groups))
         , right_end_occ = breaks[-1]
@@ -14,6 +14,7 @@ npbin = function(x)
         , sd_flow = sapply(groups, sd)
         , number_observed = sapply(groups, length)
     )
+    out
 }
        
  

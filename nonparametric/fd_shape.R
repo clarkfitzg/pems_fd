@@ -14,12 +14,14 @@ try = TRUE
 f = function (x) 
 {
     breaks = dyncut(x$occupancy2, pts_per_bin = 200)
-    binned = cut(d$occupancy2, breaks, right = FALSE)
-    groups = split(d$flow2, binned)
+    binned = cut(x$occupancy2, breaks, right = FALSE)
+    groups = split(x$flow2, binned)
     out = data.frame(station = rep(x[1, "station"], length(groups)), 
         right_end_occ = breaks[-1], mean_flow = sapply(groups, 
             mean), sd_flow = sapply(groups, sd), number_observed = sapply(groups, 
             length))
+    # TODO:
+    out
 }
 
 
@@ -68,11 +70,12 @@ msg = function(..., log = verbose)
 multiple_groups = function(queue, g = cluster_by) length(unique(queue[, g])) > 1
 
 
-process_group = function(grp, outfile, try = try)
+# TODO: Change .try in template and add to .gitignore
+process_group = function(grp, outfile, .try = try)
 {
     msg("Processing group", grp[1, cluster_by])
 
-    if(try) {try({
+    if(.try) {try({
         # TODO: log these failures
         out = f(grp)
         write.table(out, outfile, col.names = FALSE, row.names = FALSE, sep = sep)
