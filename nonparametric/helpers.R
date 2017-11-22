@@ -58,5 +58,5 @@ stn_lines = function(stn, ...)
     midpts = stn$right_end_occ - diff(c(0, stn$right_end_occ)) / 2
     midpts = c(0, midpts, 1)
     flow = c(0, stn$mean_flow, 0)
-    lines(midpts, flow)
+    lines(midpts, flow, ...)
 }

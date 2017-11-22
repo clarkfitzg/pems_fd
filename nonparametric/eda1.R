@@ -57,6 +57,10 @@ for(i in 1:N){
 
 fd_inners_scaled = corscale(fd_inners)
 
+save(fd_inners_scaled, file = "~/data/pems/fd_inners_scaled.rds")
+
+save(fd_inners, file = "~/data/pems/fd_inners.rds")
+
 D = as.dist(1 - fd_inners_scaled)
 
 # 2 clusters look best, but 3 is not totally unreasonable
@@ -72,3 +76,56 @@ medoids = stn[pam1$medoids]
 
 plot(c(0, 1), c(0, 20), type = "n")
 lapply(medoids, stn_lines)
+
+
+# Looking at the above, the 2nd medoid only has 160 observations where
+# occupancy is greater than 0.15. Lets try looking just at stations that
+# have more observations in the areas of high density
+
+HI_OCC = 0.2
+NHI_BINS = 10
+toolow = sapply(stn, function(x) sum(x$right_end_occ > HI_OCC) < NHI_BINS)
+mean(toolow)
+
+stn2 = stn[!toolow]
+
+fd_inners_scaled2 = fd_inners_scaled[!toolow, !toolow]
+
+D2 = as.dist(1 - fd_inners_scaled2)
+
+# There's really just one dominant shape, less evidence that there are
+# multiple types of fundamental diagrams.
+pam2 = pam(D2, 2)
+plot(pam2)
+
+medoids2 = stn2[pam2$medoids]
+
+plot(c(0, 1), c(0, 20), type = "n")
+lapply(medoids2, stn_lines)
+
+# We can get some idea of what the typical fds look like by plotting more
+# of them.
+library(scales)
+
+NLINES = 100
+
+stn_cls = split(stn2, pam2$clustering)
+
+set.seed(31279)
+c1 = stn_cls[[1]][sample.int(length(stn_cls[[1]]), size = NLINES)]
+c2 = stn_cls[[2]][sample.int(length(stn_cls[[2]]), size = NLINES)]
+
+pdf("fd_2clusters.pdf", width = 8, height = 5)
+par(mfrow = c(1, 2))
+plot(c(0, 1), c(0, 20), type = "n", main = "Cluster 1"
+     , xlab = "occupancy", ylab = "flow")
+lapply(c1, stn_lines, col = alpha("black", 0.1))
+stn_lines(medoids2[[1]], lwd = 3)
+plot(c(0, 1), c(0, 20), type = "n", main = "Cluster 2"
+     , xlab = "occupancy", ylab = "flow")
+lapply(c2, stn_lines, col = alpha("black", 0.1))
+stn_lines(medoids2[[2]], lwd = 3)
+dev.off()
+
+# These seem to show a single dominant shape, with some deviating
+# considerably.
