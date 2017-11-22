@@ -34,3 +34,9 @@ hist(qtrim(s$mid_slope_mph)
 
 hist(qtrim(s$right_slope_mph)
      , main = "Slope of FD greater than 0.5 density", xlab = "MPH")
+
+s2 = split(s, s$cluster)
+
+par(mfrow = c(2, 1))
+
+lapply(s2, function(x) hist(x$capacity))

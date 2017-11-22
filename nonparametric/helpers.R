@@ -36,26 +36,27 @@ piecewise_inner = function(x1, y1, x2, y2)
 }
 
 
-scale_to_cor = function
-
-# Scaling a similarity matrix into a correlation matrix
-dcor = dm
-N = nrow(dm)
-# This is a nice use case for when a for loop is easy to write, but an
-# apply function would be awkward.
-# I didn't know why I was getting NA's, so I wanted to stop and check when
-# it occurs.
-for(i in 1:N){
-    for(j in 1:N){
-        dij = dm[i, j] / sqrt(dm[i, i] * dm[j, j])
-        if(is.na(dij)) stop()
-        dcor[i, j] = dij
+# Scale the similarity matrix into a correlation matrix
+corscale = function(x)
+{
+    xnew = x
+    N = nrow(x)
+    for(i in 1:N){
+        for(j in i:N){
+            dij = x[i, j] / sqrt(x[i, i] * x[j, j])
+            if(is.na(dij)) stop()
+            xnew[i, j] = dij
+            xnew[j, i] = dij
+        }
     }
+    xnew
 }
 
-# Becomes a measure of dissimilarity
-# Is it a metric? Only thing to verify is the triangle inequality
-# Started to try this on paper, could come back if I feel like it.
-D = as.dist(1 - dcor)
 
-
+stn_lines = function(stn, ...)
+{
+    midpts = stn$right_end_occ - diff(c(0, stn$right_end_occ)) / 2
+    midpts = c(0, midpts, 1)
+    flow = c(0, stn$mean_flow, 0)
+    lines(midpts, flow)
+}

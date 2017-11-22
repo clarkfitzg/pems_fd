@@ -52,3 +52,23 @@ for(i in 1:N){
 )
 
 
+# Clustering
+############################################################
+
+fd_inners_scaled = corscale(fd_inners)
+
+D = as.dist(1 - fd_inners_scaled)
+
+# 2 clusters look best, but 3 is not totally unreasonable
+pam1 = pam(D, 2)
+plot(pam1)
+
+
+clusters = pam1$clustering
+
+table(clusters)
+
+medoids = stn[pam1$medoids]
+
+plot(c(0, 1), c(0, 20), type = "n")
+lapply(medoids, stn_lines)
