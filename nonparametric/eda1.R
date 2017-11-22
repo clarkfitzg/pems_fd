@@ -117,15 +117,63 @@ c2 = stn_cls[[2]][sample.int(length(stn_cls[[2]]), size = NLINES)]
 
 pdf("fd_2clusters.pdf", width = 8, height = 5)
 par(mfrow = c(1, 2))
-plot(c(0, 1), c(0, 20), type = "n", main = "Cluster 1"
-     , xlab = "occupancy", ylab = "flow")
+blank_plot(main = "Cluster 1")
 lapply(c1, stn_lines, col = alpha("black", 0.1))
 stn_lines(medoids2[[1]], lwd = 3)
-plot(c(0, 1), c(0, 20), type = "n", main = "Cluster 2"
-     , xlab = "occupancy", ylab = "flow")
+blank_plot(main = "Cluster 2")
 lapply(c2, stn_lines, col = alpha("black", 0.1))
 stn_lines(medoids2[[2]], lwd = 3)
 dev.off()
 
+par(mfrow = c(1, 1))
+
 # These seem to show a single dominant shape, with some deviating
-# considerably.
+# considerably. We can find the median shape, and do a similar plot
+
+pam3 = pam(D2, 1)
+
+m = stn2[[pam3$medoids]]
+
+samp = stn[sample.int(length(stn), size = NLINES)]
+blank_plot()
+lapply(c2, stn_lines, col = alpha("black", 0.1))
+stn_lines(m, lwd = 3, col = "purple")
+
+# This plotting seems to show many stations with exceedingly low
+# capacities.
+
+# Divide into low and high capacities
+CAPCUT = 10
+
+lowcap = sapply(stn2, function(x) all(x$mean_flow < CAPCUT))
+# Only about 10%
+mean(lowcap)
+
+# What if I cluster based just on the inner products, without scaling?
+# Will this group the lower ones together?
+#
+# Ack, none of this below is working. I need to create one coherent master filter
+# on stations. TODO:
+
+D3 = 1 / fd_inners
+D3 = D3[!toolow, !toolow]
+dim(D3)
+
+epsilon = 1e-5
+realsmall = quantile(D3, epsilon)
+realbig = quantile(D3, 1 - epsilon)
+
+outliers = apply(D3, 1, function(x) any(x < realsmall | x > realbig))
+mean(outliers)
+
+D3 = D3[!outliers, !outliers]
+dim(D3)
+
+diag(D3) = 0
+D3 = as.dist(D3)
+
+# Cause clusters on single points.
+weird_ones = c(233)
+
+pam4 = pam(D3, 2)
+plot(pam4)

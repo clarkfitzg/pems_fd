@@ -53,6 +53,12 @@ corscale = function(x)
 }
 
 
+blank_plot = function(...)
+{
+    plot(c(0, 1), c(0, 20), type = "n"
+         , xlab = "occupancy", ylab = "flow", ...)
+}
+
 stn_lines = function(stn, ...)
 {
     midpts = stn$right_end_occ - diff(c(0, stn$right_end_occ)) / 2
