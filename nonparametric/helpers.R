@@ -1,6 +1,10 @@
 # Tue Nov 21 09:27:23 PST 2017
 
 
+# Given observations of linear functions f and g at points a and b this
+# calculates the integral of f * g from a to b.
+#
+# Looks like it will already work as a vectorized function. Sweet!
 inner_one_piece = function(a, b, fa, fb, ga, gb)
 {
     # Roughly following my notes
@@ -20,6 +24,10 @@ inner_one_piece = function(a, b, fa, fb, ga, gb)
 
 
 # Compute function inner product on two piecewise linear functions
+#
+# x1, y1 are vectors of corresponding x and y coordinates that define a
+# piecewise linear function on [0, 1].
+# Same for x2, y2.
 piecewise_inner = function(x1, y1, x2, y2)
 {
     x = sort(unique(c(x1, x2)))
@@ -28,6 +36,12 @@ piecewise_inner = function(x1, y1, x2, y2)
 
     nm1 = length(x) - 1
     parts = rep(NA, nm1)
+
+    # If inner_one_piece is vectorized then we can replace the for loop
+    # with:
+    # a = -length(x)
+    # b = -1
+    # parts = inner_one_piece(x[a], x[b], f[a], f[b], g[a], g[b])
     for(i in seq(nm1)){
         ip1 = i + 1
         parts[i] = inner_one_piece(x[i], x[ip1], f[i], f[ip1], g[i], g[ip1])
@@ -37,6 +51,8 @@ piecewise_inner = function(x1, y1, x2, y2)
 
 
 # Scale the similarity matrix into a correlation matrix
+#
+# I don't know how to cleanly vectorize this.
 corscale = function(x)
 {
     xnew = x
