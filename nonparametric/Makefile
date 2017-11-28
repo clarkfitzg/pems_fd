@@ -1,3 +1,6 @@
+../data/keep.csv: goodstations.R
+	Rscript $<
+
 local:
 	hive -e "SELECT * FROM fd_shape" > ../data/fd_shape.csv
 

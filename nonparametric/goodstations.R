@@ -20,11 +20,12 @@ HI_OCC = 0.2
 NHI_BINS = 10
 toolow = sapply(stn, function(x) sum(x$right_end_occ > HI_OCC) < NHI_BINS)
 
-bad = hasNA | toosmall | toofew | toolow
+filtered = hasNA | toosmall | toofew | toolow
 
-write.table
+keep = sapply(stn[!filtered], function(x) x$station[1])
 
-Nstations_after = length(stn)
+write.table(keep, "../data/keep.csv"
+    , row.names = FALSE, col.names = FALSE)
+
+Nstations_after = length(keep)
 Nstations_after / Nstations_start
-
-save(stn, file = "~/data/pems/clean_stn.rds")
