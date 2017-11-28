@@ -12,3 +12,6 @@ run: fd_shape.sql fd_shape.R
 
 fd_shape.R fd_shape.sql: builder.R dyncut.R
 	Rscript $<
+
+fd_typical_unusual.pdf: eda2.R inners.R 
+	Rscript $<

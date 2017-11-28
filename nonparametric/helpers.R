@@ -39,13 +39,13 @@ piecewise_inner = function(x1, y1, x2, y2)
 
     # If inner_one_piece is vectorized then we can replace the for loop
     # with:
-    # a = -length(x)
-    # b = -1
-    # parts = inner_one_piece(x[a], x[b], f[a], f[b], g[a], g[b])
-    for(i in seq(nm1)){
-        ip1 = i + 1
-        parts[i] = inner_one_piece(x[i], x[ip1], f[i], f[ip1], g[i], g[ip1])
-    }
+    a = -length(x)
+    b = -1
+    parts = inner_one_piece(x[a], x[b], f[a], f[b], g[a], g[b])
+#    for(i in seq(nm1)){
+#        ip1 = i + 1
+#        parts[i] = inner_one_piece(x[i], x[ip1], f[i], f[ip1], g[i], g[ip1])
+#    }
     sum(parts)
 }
 

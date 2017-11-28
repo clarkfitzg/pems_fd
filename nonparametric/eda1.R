@@ -1,5 +1,6 @@
 # Tue Nov 21 10:22:45 PST 2017
 library(cluster)
+library(scales)
 
 source("helpers.R")
 
@@ -105,7 +106,6 @@ lapply(medoids2, stn_lines)
 
 # We can get some idea of what the typical fds look like by plotting more
 # of them.
-library(scales)
 
 NLINES = 100
 
@@ -136,7 +136,7 @@ m = stn2[[pam3$medoids]]
 
 samp = stn[sample.int(length(stn), size = NLINES)]
 blank_plot()
-lapply(c2, stn_lines, col = alpha("black", 0.1))
+lapply(samp, stn_lines, col = alpha("black", 0.1))
 stn_lines(m, lwd = 3, col = "purple")
 
 # This plotting seems to show many stations with exceedingly low
