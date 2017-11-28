@@ -26,7 +26,7 @@ fd_inners_scaled2 = fd_inners_scaled[!unusual, !unusual]
 med = apply(fd_inners_scaled2, 1, median)
 # Before filter: Station 404907
 # After filter: Station 400429
-medstn = which(med == max(med))
+medstn = stn2[med == max(med)][[1]]
 
 
 
@@ -39,7 +39,7 @@ set.seed(23978)
 samp = stn2[sample.int(length(stn2), size = NLINES)]
 blank_plot(main = "Typical FDs", sub = "bold line represents the 'median' station")
 lapply(samp, stn_lines, col = alpha("black", 0.1))
-stn_lines(stn2[[medstn]], lwd = 3, col = "purple")
+stn_lines(medstn, lwd = 3, col = "purple")
 
 blank_plot(main = "Unusual Stations")
 lapply(stn[unusual], stn_lines, col = alpha("black", 0.1))
@@ -47,4 +47,9 @@ lapply(stn[unusual], stn_lines, col = alpha("black", 0.1))
 dev.off()
 
 
-# Now we can 
+# We can examine the median station further
+ms = veh_hr_scale(medstn)
+
+fit_lo = lm(mean_flow ~ right_end_occ, data = ms[ms$right_end_occ < 35, ])
+
+fit_hi = lm(mean_flow ~ right_end_occ, data = ms[ms$right_end_occ > 50, ])
