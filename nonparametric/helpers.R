@@ -1,5 +1,19 @@
 # Tue Nov 21 09:27:23 PST 2017
 
+VLENGTH = 22
+OBS_HOUR = 120
+
+VEH_MILE = 5280 / VLENGTH
+
+
+veh_hr_scale = function(obs, veh_mile = VEH_MILE, obs_hour = OBS_HOUR)
+{
+    obs$right_end_occ = obs$right_end_occ * veh_mile
+    obs$mean_flow = obs$mean_flow * obs_hour
+    obs$sd_flow = obs$sd_flow * obs_hour
+    obs
+}
+
 
 # Given observations of linear functions f and g at points a and b this
 # calculates the integral of f * g from a to b.
@@ -71,14 +85,17 @@ corscale = function(x)
 
 blank_plot = function(...)
 {
-    plot(c(0, 1), c(0, 20), type = "n"
-         , xlab = "occupancy", ylab = "flow", ...)
+    x = c(0, 1) * veh_mile
+    y = c(0, 3000)
+    plot(x, y, type = "n"
+         , xlab = "occupancy (veh/mi)", ylab = "flow (veh/hr)", ...)
 }
+
 
 stn_lines = function(stn, ...)
 {
     midpts = stn$right_end_occ - diff(c(0, stn$right_end_occ)) / 2
-    midpts = c(0, midpts, 1)
-    flow = c(0, stn$mean_flow, 0)
+    midpts = c(0, midpts, 1) * VEH_MILE
+    flow = c(0, stn$mean_flow, 0) * OBS_HOUR
     lines(midpts, flow, ...)
 }
