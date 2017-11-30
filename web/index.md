@@ -60,3 +60,48 @@ into Hadoop
 - Use [Hive with R](http://clarkfitzg.github.io/2017/10/31/3-billion-rows-with-R/) to group data by station and fit the fundamental diagrams for each station
 - Compute the kernel matrix between all fundamental diagrams using
   numerical integration (just for fun, it also has an analytic form)
+
+Thu Nov 30 14:24:25 PST 2017
+
+Beginning to write paper now.
+
+## Computational Techniques
+
+The size and structure of the data presented a challenge; this is why we
+wanted to work with it. The first step: We started out by using the Python language to
+
+We first downloaded 10 months from January 2016 - October 2016 of 30 second sensor data from the
+[CalTrans Performance Measurement System](http://pems.dot.ca.gov/) (PEMS)
+http://pems.dot.ca.gov/ website onto a local server. I chose to only
+download those files from the San Francisco Bay Area (CalTrans district 3)
+because there is a large amount of data there, and we'm somewhat familiar
+with the roads.
+
+Each file represents one day of observations. There are around 10 million
+rows and 26 columns per file that take up about 90 - 100 MB each when
+compressed on disk. Represented in memory as double precision floating point numbers
+each file will occupy about 2 GB of memory. This size becomes unwieldy with most
+programming languages. I processed 284 files total, which will take up 500+
+GB if completely loaded into memory. This size motivated some new
+computational techniques.
+
+Hive provided the crucial piece of infrastructure to process this data.
+Using schema on read with external files in Hadoop File System (HDFS)
+meant that all we had to do to load the data was copy the files to HDFS, so
+the load took less than 5 minutes.
+
+We used Hive's `CLUSTER BY` to separate the data into different stations
+before analyzing the fundamental diagram for each station. We processed
+results in a streaming Map Reduce using the R language to express the
+analytic operations.
+
+When we did this we weren't aware of the `RHive` package, which hasn't been
+maintained since 2015.
+
+## Data Analysis
+
+We fit the fundamental diagram modeling vehicle flow per 30 seconds as a
+function of sensor occupancy. We used three different increasingly complex
+piecewise linear functions.
+
+The first function 
