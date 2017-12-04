@@ -32,7 +32,6 @@ end
 srand(37)
 # Covariance function where closely related points are more correlated
 ac(dx, rho) = exp(-rho * abs(dx)^1.4)
-# index = -2:0.0002:2 Mac can handle this, desktop can't
 
 n = 1378
 index = linspace(0, 0.2, n)

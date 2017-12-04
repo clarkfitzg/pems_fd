@@ -30,7 +30,7 @@ write_udaf_scripts(f = npbin
     , include_script = "dyncut.R"
     , overwrite_script = TRUE
     , overwrite_table = TRUE
-    # TODO: Just checking what happens when I do this:
-    , rows_per_chunk = 1L
+    # TODO: Just checking what happens when I vary this:
+    , rows_per_chunk = 1e6L
     , try = TRUE
 )
