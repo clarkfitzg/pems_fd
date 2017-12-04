@@ -1,4 +1,4 @@
-library(RHive)
+library(autoparallel)
 
 
 # Non parametric binned means
@@ -30,5 +30,7 @@ write_udaf_scripts(f = npbin
     , include_script = "dyncut.R"
     , overwrite_script = TRUE
     , overwrite_table = TRUE
+    # TODO: Just checking what happens when I do this:
+    , rows_per_chunk = 1L
     , try = TRUE
 )

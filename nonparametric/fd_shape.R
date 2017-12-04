@@ -1,11 +1,11 @@
 #!/usr/bin/env Rscript
 
-# 2017-11-21 08:46:20
-# Automatically generated from R by RHive version 0.0.1
+# 2017-12-04 11:51:46
+# Automatically generated from R by autoparallel version 0.0.1
 
 # These values are specific to the analysis
 verbose = FALSE
-rows_per_chunk = 1000000
+rows_per_chunk = 1
 cluster_by = "station"
 sep = '\t'
 input_cols = c("station", "flow2", "occupancy2")
