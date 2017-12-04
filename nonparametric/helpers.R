@@ -2,12 +2,14 @@
 
 VLENGTH = 22
 OBS_HOUR = 120
+FT_MILE = 5280
 
-VEH_MILE = 5280 / VLENGTH
+VEH_MILE = FT_MILE / VLENGTH
 
 
-veh_hr_scale = function(obs, veh_mile = VEH_MILE, obs_hour = OBS_HOUR)
+veh_hr_scale = function(obs, vlength = VLENGTH, obs_hour = OBS_HOUR)
 {
+    veh_mile = FT_MILE / vlength
     obs$right_end_occ = obs$right_end_occ * veh_mile
     obs$mean_flow = obs$mean_flow * obs_hour
     obs$sd_flow = obs$sd_flow * obs_hour
@@ -88,7 +90,7 @@ blank_plot = function(...)
     x = c(0, 1) * veh_mile
     y = c(0, 3000)
     plot(x, y, type = "n"
-         , xlab = "occupancy (veh/mi)", ylab = "flow (veh/hr)", ...)
+         , xlab = "density (veh/mi)", ylab = "flow (veh/hr)", ...)
 }
 
 

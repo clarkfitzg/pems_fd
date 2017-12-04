@@ -48,8 +48,9 @@ dev.off()
 
 
 # We can examine the median station further
-ms = veh_hr_scale(medstn)
+ms = veh_hr_scale(medstn, vlength = 22)
 
 fit_lo = lm(mean_flow ~ right_end_occ, data = ms[ms$right_end_occ < 35, ])
 
 fit_hi = lm(mean_flow ~ right_end_occ, data = ms[ms$right_end_occ > 50, ])
+
