@@ -132,9 +132,29 @@ has at least `k` observations in each bin. Some experimentation for a few
 different stations showed that choosing `k = 200` provided a visually
 smooth fundamental diagram. 
 
-Because there are more observations in areas of
-low occupancy we have more bins here.
-
 TODO: Is there any theoretical statistical justification for this
 technique? It's somewhat a data summary technqiue. How much information
 is preserved?
+
+Because there are more observations in areas of low occupancy we have more
+bins here. To construct the piecewise linear fundamental diagram we then
+simply define lines connecting each mean. This minimizes the assumptions we
+need to make about the fundamental diagram. Indeed, this derived data could
+be used for further analysis of empirical traffic flow.
+
+Fitting the data produces a fundamental diagram for each station. However,
+we removed stations that satisfied any of the following conditions:
+- all observations in one bin are the same. This probably comes from a
+  sensor error.
+- all observations had mean flow less than 1 vehicle per 30 seconds. If
+  occupancy is nonzero and flow is always less than 1 then this means flow
+  isn't being properly counted.
+- there are few observations in the area of high density. We experimented a
+  bit and found a reasonable filter to be fewer than 10 bins in an area of
+  occupancy greater than 0.2. These may be real phenomena in the data
+rather than sensor errors; it simply means that very little congestion
+(high occupancy) events happened at that station during the time of
+analysis.
+
+All this filtering brought the number of stations down from 3722 to 1379,
+so about 37 percent of the data 
