@@ -32,17 +32,6 @@ notes:
 
 ![Representative Fundamental Diagrams](cluster_fd.svg)
 
-The three separate lines come from fitting points in different regions:
-
-- Left line comes from fitting in (0, 0.1)
-- Center line comes from fitting in (0.2, 0.5)
-- Right line comes from fitting in (0.5, 1)
-
-I fit the lines using least squares subject to the constraints that the
-fundamental diagram must pass through (0, 0) and (1, 0).
-I ignored the points in the region (0.1, 0.2) because points vary widely
-in this region as the traffic transitions to a congested state.
-
 ## Clustering
 
 I used a kernel based method to cluster the stations. The kernel is based
@@ -68,7 +57,7 @@ Beginning to write paper now.
 ## Computational Techniques
 
 The size and structure of the data presented a challenge; this is why we
-wanted to work with it. The first step: We started out by using the Python language to
+wanted to work with it. 
 
 We first downloaded 10 months from January 2016 - October 2016 of 30 second sensor data from the
 [CalTrans Performance Measurement System](http://pems.dot.ca.gov/) (PEMS)
@@ -91,12 +80,19 @@ meant that all we had to do to load the data was copy the files to HDFS, so
 the load took less than 5 minutes.
 
 We used Hive's `CLUSTER BY` to separate the data into different stations
-before analyzing the fundamental diagram for each station. We processed
-results in a streaming Map Reduce using the R language to express the
-analytic operations.
+before analyzing the fundamental diagram for each station. Each station had
+around 800 million observations corresponding to one every 30 seconds for
+10 months. We processed results in a streaming Map Reduce using the R
+language to express the analytic operations.
 
 When we did this we weren't aware of the `RHive` package, which hasn't been
-maintained since 2015.
+actively maintained since 2015. Our computational model has less
+sophisticated interactive features, but is much more efficient for batch
+processing based on large groups, because groups are loaded in an operated
+on at a million elements at a time rather than line by line. An experiment
+showed that line by line processing would slow the program down by a factor
+of several hundred. Then we would be measuring run times in days rather
+than in minutes.
 
 ## Data Analysis
 
@@ -104,4 +100,41 @@ We fit the fundamental diagram modeling vehicle flow per 30 seconds as a
 function of sensor occupancy. We used three different increasingly complex
 piecewise linear functions.
 
-The first function 
+The first method used robust regression to fit curves on the left and right
+hand sides of a cutoff where occupancy = 0.2. We initially chose robust
+regression because of its resistance to outliers. These models included an
+intercept, so each station is represented by two linear models, which
+becomes 4 floating point numbers. Including the intercept means that the
+fundamental diagram doesn't necessarily pass through the points (0, 0) and
+(1, 0). In the areas of high density many didn't pass through (1, 0).
+
+The second method fit three separate lines from points in different
+regions:
+
+- Left line comes from fitting in (0, 0.1)
+- Center line comes from fitting in (0.2, 0.5)
+- Right line comes from fitting in (0.5, 1)
+
+We fit the lines using least squares subject to the constraints that the
+fundamental diagram must pass through (0, 0) and (1, 0).
+Enforcing this constraints makes for a more reasonable model, since we know
+that the fundamental diagram must satisfy this.
+We ignored the points in the region (0.1, 0.2) because points vary widely
+in this region as the traffic transitions to a congested state.
+
+The last method used a nonparametric method based on binning the data based
+on the values of the occupancy and then computing means for the flow in
+each bin. We started out with a fixed minimum bin width of `w = 0.01`,
+which means that there will be no more than `1 / w = 100` bins in total.
+We chose 0.01 because it provides sufficient resolution for the fundamental
+diagram in areas of low density. Furthermore, we required that each bin
+has at least `k` observations in each bin. Some experimentation for a few
+different stations showed that choosing `k = 200` provided a visually
+smooth fundamental diagram. 
+
+Because there are more observations in areas of
+low occupancy we have more bins here.
+
+TODO: Is there any theoretical statistical justification for this
+technique? It's somewhat a data summary technqiue. How much information
+is preserved?
