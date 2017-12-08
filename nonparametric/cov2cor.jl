@@ -1,3 +1,4 @@
+
 cov2cor = function(x)
     xnew = copy(x)
     N = size(x, 1)
@@ -13,17 +14,51 @@ end
 
 
 cov2cor2 = function(x)
-    xnew = copy(x)
+    xnew = similar(x)
     N = size(x, 1)
     d = 1. ./ sqrt(diag(x))
-    @inbounds for i in 1:N
-        @fastmath @inbounds @simd for j in i:N
+    @inbounds for j in 1:N
+        @simd for i in 1:N
             dij = x[i, j] * d[i] * d[j]
             xnew[i, j] = dij
-            xnew[j, i] = dij
+            #xnew[j, i] = dij
         end
     end
     return xnew
+end
+
+
+# Ethan's versions:
+
+function cov2cor3(x) 
+    d = 1 ./ sqrt.(diag(x))
+    return x .* d .* d.'
+end
+
+
+function cov2cor4(x) 
+    d = 1./sqrt.(diag(x))
+    y = similar(x)   
+    n = size(x,1) 
+    @inbounds for col in 1:n 
+        @simd for row in 1:n
+            y[row,col] = x[row,col] * d[row] * d[col]
+        end 
+    end 
+    return y
+end
+
+
+function cov2cor6(x) 
+    d = 1./sqrt.(diag(x))
+    y = similar(x)   
+    n = size(x,1) 
+    @inbounds for col in 1:n 
+        @simd for row in 1:col
+            y[row,col] = x[row,col] * d[row] * d[col]
+        end 
+    end 
+    return Symmetric(y)
 end
 
 
@@ -39,7 +74,7 @@ rhotrue = 50.
 
 # Broadcast vectors up to matrix
 distances = abs(index .- index')
-Sigma = ac.(distances, rhotrue)
+Sigma = 1. .+ ac.(distances, rhotrue)
 
 
 # Takes about 30 ms.
@@ -49,3 +84,15 @@ Sigma = ac.(distances, rhotrue)
 @time x2 = cov2cor2(Sigma)
 
 @code_warntype cov2cor2(Sigma)
+
+using BenchmarkTools
+@benchmark cov2cor($Sigma)  #<-- 17.357 ms  Clark: 12.4
+
+@benchmark cov2cor2($Sigma) #<-- 12.551 ms	Clark: 9.1
+
+@benchmark cov2cor3($Sigma) #<-- 3.246 ms	Clark: 6.9
+
+@benchmark cov2cor4($Sigma) #<-- 2.667 ms	Clark: 2.6
+
+
+@benchmark cov2cor6($Sigma) # Clark: 1.45

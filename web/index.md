@@ -157,4 +157,45 @@ rather than sensor errors; it simply means that very little congestion
 analysis.
 
 All this filtering brought the number of stations down from 3722 to 1379,
-so about 37 percent of the data 
+so about 37 percent of the data was preserved. Only about 50 percent of the
+stations even generate data. This filtering doesn't bias results, because
+...
+
+## Clustering
+
+For each of the fundamental diagrams we experimented with clustering based
+on the function inner products. Since the fundamental diagram is a function
+on [0, 1], the inner product between two different fundamental diagrams
+$$f$$ and $$g$$ is defined as
+
+$$
+    \langle f, g \rangle = \int_0^1 f(x) \cdot g(x) dx.
+$$
+
+Since we only considered piecewise linear functions this has a closed
+analytic form.
+
+We computed these inner products between every pair of functions, producing
+something analagous to a covariance matrix $$X$$ of dimension 1379 x 1379.
+Then we scaled it into a correlation matrix $$Y$$ so that we only measure
+the similarity of the shapes, ignoring the magnitude:
+
+$$
+    Y_{ij} = \frac{X_{ij}}{\sqrt{X_{ii} \cdot X_{jj}}}
+$$
+
+The fundamental diagram is necessarily positive, so values can range
+between 0 and 1. Values near 1 imply that the shapes are very similar.
+
+TODO: Find reference for clustering based on correlation matrix.
+
+Let $$J$$ be a matrix where every entry is 1. We used the matrix $$J - Y$$
+as the distance matrix to input into the 'Partitioning Around Medoids'
+algorithm. Inspection of the silhouette plots provided slight evidence for
+clustering the fundamental diagrams into $$k = 2$$ groups. Silhouette plots
+for larger values of $$k$$ provided no evidence that there should be more
+groups.
+
+Plotting actual fundamental diagrams for the $$k = 2$$ groups showed
+that there is really just one dominant shape of fundamental diagram. We
+failed to find real evidence of clusters based on this technique.

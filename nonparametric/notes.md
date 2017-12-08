@@ -18,8 +18,10 @@ There are a few reasons for why it takes this long:
 
 - It allocates memory `O(N / B)` times, where `N` is the size of
   the original data (about 800 K) and `B` is the size of the buffer
-- Much more time is spent in the R code versus the underlying C library
-  functions.
+- Relatively more time is spent in the R code versus the underlying C
+  library functions.
 
 It's also worth noting that there's no speedup for going larger than a
-million lines, because this test case only has `N`. 
+million lines, because this test case only has `N`. And none of the
+stations have more than `N` observations, so I don't think there would be
+any benefit there either.
