@@ -54,6 +54,20 @@ Thu Nov 30 14:24:25 PST 2017
 
 Beginning to write paper now.
 
+## Literature Review
+
+\cite{li2011fundamental} fit a piecewise linear fundamental diagram to 30
+second PEMS data by minimizing the absolute deviation from the observed
+data points to the fundamental diagram. This inspired the robust regression
+to fit a piecewise fundamental diagram as performed here.
+
+\cite{qu2015fundamental} use a weighting scheme to use least squares to fit
+traffic speed as a function of density. Areas of density with few
+observations get high weights, reducing bias.
+
+\cite{kianfar2013data} clusters individual observations into congested and
+free flow regimes.
+
 ## Computational Techniques
 
 The size and structure of the data presented a challenge; this is why we
@@ -63,7 +77,7 @@ We first downloaded 10 months from January 2016 - October 2016 of 30 second sens
 [CalTrans Performance Measurement System](http://pems.dot.ca.gov/) (PEMS)
 http://pems.dot.ca.gov/ website onto a local server. I chose to only
 download those files from the San Francisco Bay Area (CalTrans district 3)
-because there is a large amount of data there, and we'm somewhat familiar
+because there is a large amount of data there, and we're somewhat familiar
 with the roads.
 
 Each file represents one day of observations. There are around 10 million
@@ -139,8 +153,9 @@ is preserved?
 Because there are more observations in areas of low occupancy we have more
 bins here. To construct the piecewise linear fundamental diagram we then
 simply define lines connecting each mean. This minimizes the assumptions we
-need to make about the fundamental diagram. Indeed, this derived data could
-be used for further analysis of empirical traffic flow.
+need to make about the fundamental diagram. This derived data could
+be used for further analysis of empirical traffic flow. For example, one
+can examine the maximum mean flow for the stations.
 
 Fitting the data produces a fundamental diagram for each station. However,
 we removed stations that satisfied any of the following conditions:
@@ -191,7 +206,7 @@ TODO: Find reference for clustering based on correlation matrix.
 
 Let $$J$$ be a matrix where every entry is 1. We used the matrix $$J - Y$$
 as the distance matrix to input into the 'Partitioning Around Medoids'
-algorithm. Inspection of the silhouette plots provided slight evidence for
+algorithm. Inspection of the silhouette plots provided only slight evidence for
 clustering the fundamental diagrams into $$k = 2$$ groups. Silhouette plots
 for larger values of $$k$$ provided no evidence that there should be more
 groups.
@@ -199,3 +214,14 @@ groups.
 Plotting actual fundamental diagrams for the $$k = 2$$ groups showed
 that there is really just one dominant shape of fundamental diagram. We
 failed to find real evidence of clusters based on this technique.
+
+![../nonparametric/fd_2clusters.pdf]()
+
+A more plausible explanation is that there's one dominant shape of
+fundamental diagram, and then some deviations from this.
+
+![../nonparametric/fd_typical_unusual.pdf]()
+
+The bold lines in the images come from the stations that have the highest
+median correlation to all other station. In this sense they are the
+"median" stations, and are the most centered in the data.
