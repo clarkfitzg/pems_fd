@@ -13,16 +13,16 @@ Nov 2017
 
 ## Literature Review
 
-\autocite{li2011fundamental} fit a piecewise linear fundamental diagram to 30
+@li2011fundamental fit a piecewise linear fundamental diagram to 30
 second PEMS data by minimizing the absolute deviation from the observed
 data points to the fundamental diagram. This inspired the robust regression
 to fit a piecewise fundamental diagram as performed here.
 
-\autocite{qu2015fundamental} use a weighting scheme to use least squares to fit
+@qu2015fundamental use a weighting scheme to use least squares to fit
 traffic speed as a function of density. Areas of density with few
 observations get high weights, reducing bias.
 
-\autocite{kianfar2013data} clusters individual observations into congested and
+@kianfar2013data clusters individual observations into congested and
 free flow regimes.
 
 ## Computational Techniques
@@ -138,7 +138,7 @@ stations even generate data. This filtering doesn't bias results, because
 For each of the fundamental diagrams we experimented with clustering based
 on the function inner products. Since the fundamental diagram is a function
 on [0, 1], the inner product between two different fundamental diagrams
-$$f$$ and $$g$$ is defined as
+$f$ and $g$ is defined as
 
 $$
     \langle f, g \rangle = \int_0^1 f(x) \cdot g(x) dx.
@@ -148,8 +148,8 @@ Since we only considered piecewise linear functions this has a closed
 analytic form.
 
 We computed these inner products between every pair of functions, producing
-something analagous to a covariance matrix $$X$$ of dimension 1379 x 1379.
-Then we scaled it into a correlation matrix $$Y$$ so that we only measure
+something analagous to a covariance matrix $X$ of dimension 1379 x 1379.
+Then we scaled it into a correlation matrix $Y$ so that we only measure
 the similarity of the shapes, ignoring the magnitude:
 
 $$
@@ -161,14 +161,14 @@ between 0 and 1. Values near 1 imply that the shapes are very similar.
 
 TODO: Find reference for clustering based on correlation matrix.
 
-Let $$J$$ be a matrix where every entry is 1. We used the matrix $$J - Y$$
+Let $J$ be a matrix where every entry is 1. We used the matrix $J - Y$
 as the distance matrix to input into the 'Partitioning Around Medoids'
 algorithm. Inspection of the silhouette plots provided only slight evidence for
-clustering the fundamental diagrams into $$k = 2$$ groups. Silhouette plots
-for larger values of $$k$$ provided no evidence that there should be more
+clustering the fundamental diagrams into $k = 2$ groups. Silhouette plots
+for larger values of $k$ provided no evidence that there should be more
 groups.
 
-Plotting actual fundamental diagrams for the $$k = 2$$ groups showed
+Plotting actual fundamental diagrams for the $k = 2$ groups showed
 that there is really just one dominant shape of fundamental diagram. We
 failed to find real evidence of clusters based on this technique.
 
@@ -187,4 +187,4 @@ The bold lines in the images come from the stations that have the highest
 median correlation to all other station. In this sense they are the
 "median" stations, and are the most centered in the data.
 
-# Bibliography
+# References
