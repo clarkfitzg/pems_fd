@@ -9,7 +9,7 @@ institute:
     - Statistics Department, UC Davis
     - Civil Engineering Department, UC Davis
 abstract:
-    "Write this later"
+    "Will add this later."
 ---
 
 
@@ -18,23 +18,35 @@ abstract:
 @li2011fundamental fit a piecewise linear fundamental diagram to 30
 second PEMS data by minimizing the absolute deviation from the observed
 data points to the fundamental diagram. This inspired the robust regression
-to fit a piecewise fundamental diagram as performed here.
+presented here.
 
-@qu2015fundamental use a weighting scheme to use least squares to fit
+@qu2015fundamental use weighted least squares to fit
 traffic speed as a function of density. Areas of density with few
-observations get high weights, reducing bias.
+observations get high weights, reducing bias for various models. Our binned
+means technique also addresses the problem of fitting data in regions where
+data points seldom appear.
 
 @kianfar2013data clusters individual observations into congested and
-free flow regimes.
+free flow regimes. In this paper we apply clustering techniques to the
+stations themselves.
 
-## Computational Techniques
+## Data
 
 The size and structure of the data presented a challenge; this is why we
 wanted to work with it. 
 
-We first downloaded 10 months from January 2016 - October 2016 of 30 second sensor data from the
+We downloaded 10 months of 30 second loop detector data in 2016 from the
 [CalTrans Performance Measurement System](http://pems.dot.ca.gov/) (PEMS)
-http://pems.dot.ca.gov/ website onto a local server. I chose to only
+http://pems.dot.ca.gov/ website. This analysis models the fundamental
+diagram by using traffic flow as a function of occupancy. __Flow__ is the
+number of vehicles that pass over the detector in a 30 second period, and
+__occupancy__ is the fraction of time that a vehicle is over the detector.
+
+
+We chose Caltrans
+district 3, the San Francisco Bay Area, because it contains many
+observations of high traffic activity.
+
 download those files from the San Francisco Bay Area (CalTrans district 3)
 because there is a large amount of data there, and we're somewhat familiar
 with the roads.
@@ -47,6 +59,8 @@ programming languages. I processed 284 files total, which will take up 500+
 GB if completely loaded into memory. This size motivated some new
 computational techniques.
 
+
+## Computational Techniques
 Hive provided the crucial piece of infrastructure to process this data.
 Using schema on read with external files in Hadoop File System (HDFS)
 meant that all we had to do to load the data was copy the files to HDFS, so
