@@ -1,14 +1,16 @@
 ---
 title: "PEMS stations fundamental diagrams"
 bibliography: citations.bib
+date: "December 2017"
+author:
+    - Clark Fitzgerald 
+    - Professor Michael Zhang
+institute:
+    - Statistics Department, UC Davis
+    - Civil Engineering Department, UC Davis
+abstract:
+    "Write this later"
 ---
-
-
-Clark Fitzgerald (Statistics), Professor Michael Zhang (Civil Engineering)
-
-UC Davis
-
-Nov 2017
 
 
 ## Literature Review
