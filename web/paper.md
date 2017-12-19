@@ -14,7 +14,8 @@ abstract:
 
 ## Intro
 
-Hive
+This paper demonstrates scalable computational techniques for data analysis
+and explores clustering techniques based on distances between functions.
 
 ## Literature Review
 
@@ -36,19 +37,16 @@ stations themselves.
 ## Data
 
 The size and structure of the data presented a challenge; this is why we
-wanted to work with it. 
+wanted to work with it.  The analysis examined the relationship between
+flow and occupancy for the second lane.  __Flow__ is the number of vehicles
+that pass over the detector in a 30 second period, and __occupancy__ is the
+fraction of time that a vehicle is over the detector. 
 
 We downloaded 10 months of 30 second loop detector data in 2016 from the
 [CalTrans Performance Measurement System](http://pems.dot.ca.gov/) (PEMS)
 http://pems.dot.ca.gov/ website. We chose Caltrans district 3, the San
 Francisco Bay Area, because this area contains many observations of high traffic
 activity.
-
-We're interested in flow and occupancy for
-the second lane.  __Flow__ is the number of vehicles that pass over the
-detector in a 30 second period, and __occupancy__ is the fraction of time
-that a vehicle is over the detector.  This analysis models the fundamental
-diagram by using traffic flow as a function of occupancy. 
 
 Each downloaded file represents one day of observations. There are around
 10 million rows and 26 columns per file that take up about 90 - 100 MB each
@@ -61,44 +59,42 @@ motivated some new computational techniques.
 
 ## Computational Techniques
 
-Hive and Hadoop provided the crucial piece of infrastructure to process this data
-@hive. Hive directly processed the data files produced by PEMS. All we had
-to do was copy the files to Hadoop File System (HDFS), declare it to be a
-table, and we were ready for analysis. This "schema on read" technique is
-far more efficient than a traditional database for this type of research
-project. For this project we only needed to execute a handful of specific
-queries on data that doesn't change.  In contrast, a traditional database
-must validate each data point and store it in a database specific
-representation.
-
 To analyze this data we need:
 
 - scalability
 - high throughput
-- an efficient interface into languages suited to data analysis
+- an efficient interface into a data analysis language
 
-Hive provides all of these things.
+Hive provides all of these things. Scalability and high throughput come
+through Hadoop's map reduce. The POSIX concept of standard input, or
+`stdin`, provides an efficient interface into the R programming langauge.
+
+Hive directly processed the data files produced by PEMS. All we had
+to do was copy the files to Hadoop File System (HDFS), declare it to be a
+table, and we were ready for analysis. This "schema on read" technique is
+far more efficient than a traditional database for this type of research
+project. This project required the execution of a handful of specific
+queries on data that doesn't change. In contrast, a traditional database
+must validate each data point and store it in a database specific
+representation.
+
+After analyzing the data we became aware of the RHive package. Our
+computational model has less sophisticated interactive features, but is
+much more efficient for batch processing based on large groups, because
+groups are loaded in an operated on at a million elements at a time rather
+than line by line. An experiment showed that line by line processing would
+slow the program down by a factor of several hundred. Then we would be
+measuring run times in days rather than in minutes.
 
 The only fundamental limit to this computational approach is how much data
-a single R process can handle. We can even get over this by using map
+a single R process can handle. One way to get around this is by using map
 reduce within R.
-
 
 We used Hive's `CLUSTER BY` to separate the data into different stations
 before analyzing the fundamental diagram for each station. Each station had
 around 800 million observations corresponding to one every 30 seconds for
 10 months. We processed results in a streaming Map Reduce using the R
 language to express the analytic operations.
-
-After analyzing the data we became aware of the RHive package 
-When we did this we weren't aware of the `RHive` package, which hasn't been
-actively maintained since 2015. Our computational model has less
-sophisticated interactive features, but is much more efficient for batch
-processing based on large groups, because groups are loaded in an operated
-on at a million elements at a time rather than line by line. An experiment
-showed that line by line processing would slow the program down by a factor
-of several hundred. Then we would be measuring run times in days rather
-than in minutes.
 
 ## Data Analysis
 
@@ -172,30 +168,23 @@ can examine the maximum mean flow for the stations.
 ## Clustering
 
 For each of the fundamental diagrams we experimented with clustering based
-on the function inner products. Since the fundamental diagram is a function
-on [0, 1], the inner product between two different fundamental diagrams
-$f$ and $g$ is defined as
+on the distance metric induced by the inner product on functions. Since the
+fundamental diagram representing flow as a function of occupancy is a
+function on [0, 1], the distance between two different fundamental
+diagrams $f$ and $g$ is defined as
+
+$$
+    d(f, g) \equiv ||f - g|| = \sqrt{\langle f - g, f - g \rangle} 
+$$
+
+where 
 
 $$
     \langle f, g \rangle = \int_0^1 f(x) \cdot g(x) dx.
 $$
 
-Since we only considered piecewise linear functions this has a closed
-analytic form.
-
-We computed these inner products between every pair of functions, producing
-something analagous to a covariance matrix $X$ of dimension 1379 x 1379.
-Then we scaled it into a correlation matrix $Y$ so that we only measure
-the similarity of the shapes, ignoring the magnitude:
-
-$$
-    Y_{ij} = \frac{X_{ij}}{\sqrt{X_{ii} \cdot X_{jj}}}
-$$
-
-The fundamental diagram is necessarily positive, so values can range
-between 0 and 1. Values near 1 imply that the shapes are very similar.
-
-TODO: Find reference for clustering based on correlation matrix.
+We only considered piecewise linear functions, so all of these expressions
+have closed analytic forms that can be quickly computed.
 
 Let $J$ be a matrix where every entry is 1. We used the matrix $J - Y$
 as the distance matrix to input into the 'Partitioning Around Medoids'
@@ -209,16 +198,15 @@ figure \ref{fd_2clusters} showed
 that there is really just one dominant shape of fundamental diagram. We
 failed to find real evidence of clusters based on this technique.
 
-![Two clusters \label{fd_2clusters}](../nonparametric/fd_2clusters.pdf)
+![The bold lines come from the stations that have the highest
+median correlation to all other station. In this sense they are the
+"median" stations, and are the most centered in the data.
+\label{fd_2clusters}](../nonparametric/fd_2clusters.pdf)
 
 A more plausible explanation is that there's one dominant shape of
 fundamental diagram, and then some deviations from this as in figure
 \ref{fd_typical_unusual}.
 
 ![Typical versus unusual clusters \label{fd_typical_unusual}](../nonparametric/fd_typical_unusual.pdf)
-
-The bold lines in the images come from the stations that have the highest
-median correlation to all other station. In this sense they are the
-"median" stations, and are the most centered in the data.
 
 # References
