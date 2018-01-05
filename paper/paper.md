@@ -186,8 +186,7 @@ $$
 We only considered piecewise linear functions, so all of these expressions
 have closed analytic forms that can be quickly computed.
 
-Let $J$ be a matrix where every entry is 1. We used the matrix $J - Y$
-as the distance matrix to input into the 'Partitioning Around Medoids'
+The distance matrix to input into the 'Partitioning Around Medoids'
 algorithm. Inspection of the silhouette plots provided only slight evidence for
 clustering the fundamental diagrams into $k = 2$ groups. Silhouette plots
 for larger values of $k$ provided no evidence that there should be more
