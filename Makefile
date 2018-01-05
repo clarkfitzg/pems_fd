@@ -1,8 +1,8 @@
 serve: station.json
 	python3 -m http.server 8000
 
-data/station_cluster.csv: eda3.R
-	Rscript $<
+data/station_cluster.csv: nonparametric/eda3.R
+	cd nonparametric; Rscript eda3.R; cd ..
 
 station.json: station_json.R data/station_cluster.csv
 	Rscript $<

@@ -186,20 +186,25 @@ $$
 We only considered piecewise linear functions, so all of these expressions
 have closed analytic forms that can be quickly computed.
 
-The distance matrix to input into the 'Partitioning Around Medoids'
-algorithm. Inspection of the silhouette plots provided only slight evidence for
+The distance matrix to input into the Partitioning Around Medoids (PAM)
+algorithm. Inspection of the silhouette plots provided some evidence for
 clustering the fundamental diagrams into $k = 2$ groups. Silhouette plots
 for larger values of $k$ provided no evidence that there should be more
 groups.
 
-Plotting actual fundamental diagrams for the $k = 2$ groups in
-figure \ref{fd_2clusters} showed
-that there is really just one dominant shape of fundamental diagram. We
-failed to find real evidence of clusters based on this technique.
+Figure \ref{fd_2clusters} shows a sample of the fundamental diagrams
+corresponding to the PAM algorithm with two clusters. Cluster 1 contains 88
+percent of the data, making it the dominant cluster. These fundamental
+diagrams look roughly like the triangular diagram we expect, and they have
+a max flow of around 2000 vehicles per hour. Cluster 2 contains the
+remaining 12 percent of the data, and these stations have much
+lower flow.
 
-![The bold lines come from the stations that have the highest
-median correlation to all other station. In this sense they are the
-"median" stations, and are the most centered in the data.
+TODO: Now I need to plot the two clusters again to check for patterns.
+
+![The bold lines come from the fundamental diagrams that have the lowest
+median distances to other stations in their clusters. In this sense they are the
+"median" stations.
 \label{fd_2clusters}](../nonparametric/fd_2clusters.pdf)
 
 A more plausible explanation is that there's one dominant shape of
@@ -207,5 +212,10 @@ fundamental diagram, and then some deviations from this as in figure
 \ref{fd_typical_unusual}.
 
 ![Typical versus unusual clusters \label{fd_typical_unusual}](../nonparametric/fd_typical_unusual.pdf)
+
+A similar cluster analysis on the shape of the fundamental diagrams failed
+to reveal interesting structure.
+
+# Further Work
 
 # References

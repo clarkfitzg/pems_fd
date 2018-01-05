@@ -47,11 +47,7 @@ function one_circle(i) {
         , "ID: " + station.ID[i]
         , "Freeway: " + station.Fwy[i] + " " + station.Dir[i]
         , ""
-        , "Capacity: " + station.capacity[i].toFixed(ndigs)
-        , "Left slope: " + station.left_slope[i].toFixed(ndigs)
-        , "Mid slope: " + station.mid_slope[i].toFixed(ndigs)
-        , "Right slope: " + station.right_slope[i].toFixed(ndigs)
-        , "Right convex: " + station.right_convex[i]
+        , "maxflow: " + station.maxflow[i].toFixed(ndigs)
         ];
 
     circle.bindPopup(info.join("<br>")).openPopup();
