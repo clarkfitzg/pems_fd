@@ -39,6 +39,24 @@ inner_one_piece = function(a, b, fa, fb, ga, gb)
 }
 
 
+# Compute the distance based on function inner product:
+#
+# sqrt(<f-g, f-g>)
+distance = function(x1, y1, x2, y2)
+{
+    x = sort(unique(c(x1, x2)))
+    f = approx(x1, y1, xout = x)$y
+    g = approx(x2, y2, xout = x)$y
+
+    delta = f - g
+
+    a = -length(x)
+    b = -1
+    parts = inner_one_piece(x[a], x[b], delta[a], delta[b], delta[a], delta[b])
+    sqrt(sum(parts))
+}
+
+
 # Compute function inner product on two piecewise linear functions
 #
 # x1, y1 are vectors of corresponding x and y coordinates that define a
@@ -50,18 +68,9 @@ piecewise_inner = function(x1, y1, x2, y2)
     f = approx(x1, y1, xout = x)$y
     g = approx(x2, y2, xout = x)$y
 
-    nm1 = length(x) - 1
-    parts = rep(NA, nm1)
-
-    # If inner_one_piece is vectorized then we can replace the for loop
-    # with:
     a = -length(x)
     b = -1
     parts = inner_one_piece(x[a], x[b], f[a], f[b], g[a], g[b])
-#    for(i in seq(nm1)){
-#        ip1 = i + 1
-#        parts[i] = inner_one_piece(x[i], x[ip1], f[i], f[ip1], g[i], g[ip1])
-#    }
     sum(parts)
 }
 
