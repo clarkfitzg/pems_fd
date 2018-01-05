@@ -39,3 +39,5 @@ for(i in 1:N){
 )
 
 colnames(fd_dist) = rownames(fd_dist) = keep
+
+save(fd_dist, file = "~/data/pems/fd_dist.rds")
