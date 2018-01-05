@@ -1,16 +1,6 @@
 source("helpers.R")
 
-fd_shape = read.table("../data/fd_shape.tsv"
-    , col.names = c("station", "right_end_occ", "mean_flow", "sd_flow", "number_observed")
-    , colClasses = c("integer", "numeric", "numeric", "numeric", "integer")
-    , na.strings = "NULL"
-    )
-
-# Making this harder than it has to be...
-keep = read.csv("../data/keep.csv")[, 1]
-stn = split(fd_shape, fd_shape$station)
-keep_logical = sapply(stn, function(x) all(x$station %in% keep))
-stn = stn[keep_logical]
+stn = load_station()
 
 N = length(stn)
 

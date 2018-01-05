@@ -7,10 +7,26 @@ FT_MILE = 5280
 VEH_MILE = FT_MILE / VLENGTH
 
 
+load_station = function(f = "../data/fd_shape.tsv")
+{
+    fd_shape = read.table(f
+        , col.names = c("station", "right_end_occ", "mean_flow", "sd_flow", "number_observed")
+        , colClasses = c("integer", "numeric", "numeric", "numeric", "integer")
+        , na.strings = "NULL"
+        )
+
+    # Making this harder than it has to be...
+    keep = read.csv("../data/keep.csv")[, 1]
+    stn = split(fd_shape, fd_shape$station)
+    keep_logical = sapply(stn, function(x) all(x$station %in% keep))
+    stn = stn[keep_logical]
+    stn
+}
+
+
 veh_hr_scale = function(obs, vlength = VLENGTH, obs_hour = OBS_HOUR)
 {
-    veh_mile = FT_MILE / vlength
-    obs$right_end_occ = obs$right_end_occ * veh_mile
+    obs$right_end_occ = obs$right_end_occ * VEH_MILE
     obs$mean_flow = obs$mean_flow * obs_hour
     obs$sd_flow = obs$sd_flow * obs_hour
     obs
@@ -96,7 +112,7 @@ corscale = function(x)
 
 blank_plot = function(...)
 {
-    x = c(0, 1) * veh_mile
+    x = c(0, 1) * VEH_MILE
     y = c(0, 3000)
     plot(x, y, type = "n"
          , xlab = "density (veh/mi)", ylab = "flow (veh/hr)", ...)
