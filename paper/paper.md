@@ -1,7 +1,7 @@
 ---
 title: "PEMS stations fundamental diagrams"
 bibliography: citations.bib
-date: "December 2017"
+date: "January 2018"
 author:
     - Clark Fitzgerald 
     - Professor Michael Zhang
@@ -196,26 +196,34 @@ Figure \ref{fd_2clusters} shows a sample of the fundamental diagrams
 corresponding to the PAM algorithm with two clusters. Cluster 1 contains 88
 percent of the data, making it the dominant cluster. These fundamental
 diagrams look roughly like the triangular diagram we expect, and they have
-a max flow of around 2000 vehicles per hour. Cluster 2 contains the
+a max mean flow of around 2000 vehicles per hour. Cluster 2 contains the
 remaining 12 percent of the data, and these stations have much
 lower flow.
 
-TODO: Now I need to plot the two clusters again to check for patterns.
+We can view the clusters on an interactive map here:
+[http://anson.ucdavis.edu/~clarkf/fd/](http://anson.ucdavis.edu/~clarkf/fd/).
+We see points from cluster 2 on I 80 in the toll area for the Bay Bridge from
+Oakland to San Francisco.
 
 ![The bold lines come from the fundamental diagrams that have the lowest
 median distances to other stations in their clusters. In this sense they are the
 "median" stations.
 \label{fd_2clusters}](../nonparametric/fd_2clusters.pdf)
 
-A more plausible explanation is that there's one dominant shape of
-fundamental diagram, and then some deviations from this as in figure
-\ref{fd_typical_unusual}.
-
 ![Typical versus unusual clusters \label{fd_typical_unusual}](../nonparametric/fd_typical_unusual.pdf)
 
-A similar cluster analysis on the shape of the fundamental diagrams failed
-to reveal interesting structure.
+We performed a similar cluster analysis on just the shape of the
+fundamental diagrams. We did this by normalizing each fundamental diagram
+$f$, ie. repeating the analysis on $f'(x) = f(x) / \int_0^1 f(y) dy$. This failed
+to reveal any interesting patterns in the shapes of the fundamental
+diagrams. Most shapes roughly follow the triangular fundamental diagram,
+with erratic deviations as seen in figure \ref{fd_typical_unusual}. Faulty
+sensors likely caused many of these anomalies.
 
 # Further Work
+
+We could consider all lanes on the freeway, rather than just the second
+lane as we did here. This would produce a more complete picture of the
+traffic patterns.
 
 # References
