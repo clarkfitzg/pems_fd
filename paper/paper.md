@@ -9,13 +9,32 @@ institute:
     - Statistics Department, UC Davis
     - Civil Engineering Department, UC Davis
 abstract:
-    "Will add this later."
+    "TODO"
 ---
 
 ## Intro
 
-This paper demonstrates scalable computational techniques for data analysis
-and explores clustering techniques based on distances between functions.
+The CalTrans PEMS database contains X terabytes of traffic sensor data.
+
+This paper demonstrates scalable computational techniques for data
+analysis and 
+
+An inherent problem in understanding the fundamental diagram is that there
+are very few observations in areas of high density. Thus we need to look at
+all the data to find them when they occur.
+
+We use this to build data driven models of the fundamental diagram as a
+function, and compute distances between them based on distances calculated
+with the inner product between functions. The fundamental diagrams group
+into those showing high and low flows. (TODO: how high?)
+
+explores clustering techniques based on distances between
+functions.
+
+
+We combined the Apache Hive database with the R programming language to
+efficiently process hundreds of billions of data points.
+
 
 ## Literature Review
 
