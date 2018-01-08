@@ -14,11 +14,6 @@ abstract:
 
 ## Intro
 
-The CalTrans PEMS database contains X terabytes of traffic sensor data.
-
-This paper demonstrates scalable computational techniques for data
-analysis and 
-
 An inherent problem in understanding the fundamental diagram is that there
 are very few observations in areas of high density. Thus we need to look at
 all the data to find them when they occur.
@@ -28,12 +23,24 @@ function, and compute distances between them based on distances calculated
 with the inner product between functions. The fundamental diagrams group
 into those showing high and low flows. (TODO: how high?)
 
+
+The CalTrans PEMS database contains terabytes of historical traffic sensor
+data. Most academic analyses focus on small areas for small time periods.
+This paper demonstrates how to compose and integrate powerful
+data processing technologies to create a scalable solution that allows us
+to apply essentially any analysis we like.
+
 explores clustering techniques based on distances between
 functions.
 
 
 We combined the Apache Hive database with the R programming language to
 efficiently process hundreds of billions of data points.
+
+Contributions of this paper:
+- Demonstrate scalable and efficient computational techniques
+- Cluster the PEMS sensor stations into naturally occuring groups with high
+  and low flow 
 
 
 ## Literature Review
@@ -238,6 +245,9 @@ to reveal any interesting patterns in the shapes of the fundamental
 diagrams. Most shapes roughly follow the triangular fundamental diagram,
 with erratic deviations as seen in figure \ref{fd_typical_unusual}. Faulty
 sensors likely caused many of these anomalies.
+
+![Maximum mean flows grouped by cluster\label{high_flows}](../nonparametric/high_flows.pdf)
+
 
 # Further Work
 

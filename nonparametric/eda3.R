@@ -61,6 +61,15 @@ c1 = stn_cls[[1]][sample.int(length(stn_cls[[1]]), size = NLINES)]
 c2 = stn_cls[[2]][sample.int(length(stn_cls[[2]]), size = NLINES)]
 
 
+pdf("high_flows.pdf", width = 6, height = 4)
+
+lattice::densityplot(~maxflow, data = station_cluster, groups = cluster,
+                     plot.points = FALSE, ref = TRUE,
+                     auto.key = list(space = "right"), xlab = "vehicles per hour")
+
+dev.off()
+
+
 # This is way more appealing as a cluster. We see high and low flows
 pdf("fd_2clusters.pdf", width = 8, height = 5)
 
