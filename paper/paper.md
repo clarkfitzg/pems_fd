@@ -14,15 +14,14 @@ abstract:
 
 ## Intro
 
-An inherent problem in understanding the fundamental diagram is that there
-are very few observations in areas of high density. Thus we need to look at
-all the data to find them when they occur.
+Traffic engineers model the flow of traffic (vehicles per hour) as a
+function of traffic density (vehicles per mile). This model dictates how
+traffic will flow in a given stretch of road, so it is known as the
+fundamental diagram @daganzo1997fundamentals.
 
-We use this to build data driven models of the fundamental diagram as a
-function, and compute distances between them based on distances calculated
-with the inner product between functions. The fundamental diagrams group
-into those showing high and low flows. (TODO: how high?)
-
+An inherent problem in understanding the fundamental diagram is that we
+seldom observe high density traffic. Thus we need to look at all the data
+to find observations in areas of high density.
 
 The CalTrans PEMS database contains terabytes of historical traffic sensor
 data. Most academic analyses focus on small areas for small time periods.
@@ -33,13 +32,19 @@ to apply essentially any analysis we like.
 explores clustering techniques based on distances between
 functions.
 
+We use this to build data driven models of the fundamental diagram as a
+function, and compute distances between them based on distances calculated
+with the inner product between functions. The fundamental diagrams group
+into those showing high and low flows. (TODO: how high?)
+
 
 We combined the Apache Hive database with the R programming language to
 efficiently process hundreds of billions of data points.
 
 Contributions of this paper:
+
 - Demonstrate scalable and efficient computational techniques
-- Cluster the PEMS sensor stations into naturally occuring groups with high
+- Discover the PEMS sensor stations cluster into naturally occuring groups with high
   and low flow 
 
 
@@ -246,13 +251,30 @@ diagrams. Most shapes roughly follow the triangular fundamental diagram,
 with erratic deviations as seen in figure \ref{fd_typical_unusual}. Faulty
 sensors likely caused many of these anomalies.
 
-![Maximum mean flows grouped by cluster\label{high_flows}](../nonparametric/high_flows.pdf)
+![This density plot shows the maximum mean flow at each station, grouped by cluster.\label{high_flows}](../nonparametric/high_flows.pdf)
 
+Figure \ref{high_flows} shows that the two clusters have different rates of
+maximal flow. The maximum flow in the dominant cluster 1 is around 2000
+vehicles per hour, while the max flow in cluster 2 is much lower. This 
+
+## Discussion
 
 # Further Work
 
 We could consider all lanes on the freeway, rather than just the second
 lane as we did here. This would produce a more complete picture of the
 traffic patterns.
+
+We could join the PEMS data with data on historical weather and sunrise /
+sunset times to understand how changes in weather and light conditions
+influence the fundamental diagram.
+
+# Conclusion
+
+Hive lets us do many high level operations with SQL.
+The computational techniques are valuable because they allow the user to
+express possibly complex statistical techniques in the familiar high level R language.
+It's possible to write the entire analysis in map reduce and run it
+natively in Hive, but this would be far more work.
 
 # References
