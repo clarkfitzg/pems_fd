@@ -2,6 +2,8 @@
 title: "PEMS stations fundamental diagrams"
 bibliography: citations.bib
 date: "January 2018"
+header-includes:
+    - \usepackage{setspace}\doublespacing
 author:
     - Clark Fitzgerald 
     - Professor Michael Zhang
@@ -14,14 +16,21 @@ abstract:
 
 ## Intro
 
-Traffic engineers model the flow of traffic (vehicles per hour) as a
-function of traffic density (vehicles per mile). This model dictates how
+Traffic engineers model the __flow__ of traffic (vehicles per hour) as a
+function of traffic __density__ (vehicles per mile). This model dictates how
 traffic will flow in a given stretch of road, so it is known as the
 fundamental diagram @daganzo1997fundamentals.
 
 An inherent problem in understanding the fundamental diagram is that we
-seldom observe high density traffic. Thus we need to look at all the data
-to find observations in areas of high density.
+seldom observe high density traffic.
+How much?
+
+The median station happened to be on Interstate 80 on the Bay Bridge connecting Oakland and
+San Francisco, between the toll booth and Yerba Buena Island.
+
+This paper addresses that problem
+directly
+by examining massive amounts of data to incorporate 
 
 The CalTrans PEMS database contains terabytes of historical traffic sensor
 data. Most academic analyses focus on small areas for small time periods.

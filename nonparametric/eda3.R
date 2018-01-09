@@ -111,3 +111,17 @@ lapply(stn[unusual], stn_lines, col = alpha("black", 0.1))
 dev.off()
 
 
+# Plots of the median station
+
+pdf("med_stn.pdf", width = 10, height = 5)
+
+par(mfrow = c(1, 3))
+
+blank_plot(main = "Nonparametric")
+stn_lines(medstn, conf = TRUE)
+
+blank_plot(main = "Triangular")
+
+dev.off()
+
+

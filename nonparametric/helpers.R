@@ -119,10 +119,16 @@ blank_plot = function(...)
 }
 
 
-stn_lines = function(stn, ...)
+stn_lines = function(stn, conf = FALSE, ...)
 {
     midpts = stn$right_end_occ - diff(c(0, stn$right_end_occ)) / 2
     midpts = c(0, midpts, 1) * VEH_MILE
     flow = c(0, stn$mean_flow, 0) * OBS_HOUR
     lines(midpts, flow, ...)
+    if(conf){
+        epsilon = 2 * c(0, stn$sd_flow, 0) * OBS_HOUR
+        points(midpts, flow)
+        lines(midpts, flow + epsilon, lty = 2)
+        lines(midpts, flow - epsilon, lty = 2)
+    }
 }
