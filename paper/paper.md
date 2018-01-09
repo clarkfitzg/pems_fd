@@ -140,7 +140,11 @@ language to express the analytic operations.
 
 We fit the fundamental diagram modeling vehicle flow per 30 seconds as a
 function of sensor occupancy. We used three different increasingly complex
-piecewise linear functions.
+piecewise linear functions as shown in figure \ref{med_stn}.
+
+![The models used to fit the fundamental diagrams.
+\label{med_stn}](../nonparametric/med_stn.pdf)
+
 
 Before fitting
 we removed stations that satisfied any of the following conditions:

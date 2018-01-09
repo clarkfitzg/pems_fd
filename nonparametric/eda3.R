@@ -117,10 +117,15 @@ pdf("med_stn.pdf", width = 10, height = 5)
 
 par(mfrow = c(1, 3))
 
+blank_plot(main = "Triangular")
+lines(c(0, 25.7, VEH_MILE), c(10, 1770, 20))
+
+blank_plot(main = "Three Pieces")
+stn_lines(medstn)
+lines(c(0, 29, 132, VEH_MILE), c(0, 1900, 754, 0))
+
 blank_plot(main = "Nonparametric")
 stn_lines(medstn, conf = TRUE)
-
-blank_plot(main = "Triangular")
 
 dev.off()
 
