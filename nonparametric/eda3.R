@@ -63,9 +63,11 @@ c2 = stn_cls[[2]][sample.int(length(stn_cls[[2]]), size = NLINES)]
 
 pdf("high_flows.pdf", width = 6, height = 4)
 
-lattice::densityplot(~maxflow, data = station_cluster, groups = cluster,
+p = lattice::densityplot(~maxflow, data = station_cluster, groups = cluster,
                      plot.points = FALSE, ref = TRUE,
                      auto.key = list(space = "right"), xlab = "vehicles per hour")
+
+print(p)
 
 dev.off()
 
@@ -113,7 +115,7 @@ dev.off()
 
 # Plots of the median station
 
-pdf("med_stn.pdf", width = 10, height = 5)
+pdf("med_stn.pdf", width = 8, height = 4)
 
 par(mfrow = c(1, 3))
 
@@ -121,7 +123,6 @@ blank_plot(main = "Triangular")
 lines(c(0, 25.7, VEH_MILE), c(10, 1770, 20))
 
 blank_plot(main = "Three Pieces")
-stn_lines(medstn)
 lines(c(0, 29, 132, VEH_MILE), c(0, 1900, 754, 0))
 
 blank_plot(main = "Nonparametric")
