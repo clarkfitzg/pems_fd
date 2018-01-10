@@ -13,53 +13,45 @@ institute:
     - Statistics Department, UC Davis
     - Civil Engineering Department, UC Davis
 abstract:
-    "TODO"
+    "This paper analyzes several hundred GB of loop detector data from the
+California Department of Transportation Performance Management System
+(PEMS). We use the data to estimate the fundamental diagram of traffic flow
+as a function of density and then perform clustering on the sensor
+locations. The clusters reveal a dominant group of fundamental diagrams
+with normal flow and a smaller group with lesser flow. We demonstrate
+efficient computational techniques to process data both in and out of main
+memory."
+
 ---
 
-## Intro
+## Introduction
 
-Traffic engineers model the __flow__ of traffic (vehicles per hour) as a
-function of traffic __density__ (vehicles per mile). This model dictates how
+Traffic engineers model the flow of traffic (vehicles per hour) as a
+function of traffic density (vehicles per mile). This model dictates how
 traffic will flow in a given stretch of road, so it is known as the
-fundamental diagram @daganzo1997fundamentals.
+fundamental diagram @daganzo1997fundamentals.  The motivating question for
+this paper is: what types of fundamental diagrams appear in empirical data
+sets? How can we characterize them?
 
-An inherent problem in understanding the fundamental diagram is that we
-seldom observe high density traffic.
-How much?
+At most highway locations we seldom observe high density
+traffic, which makes this question inherently challenging.  This paper
+addresses the challenge directly by examining a massive amount of data and
+including all of it in the estimation and fitting of the fundamental
+diagrams. The section on _Computation_ explains our efficient computational
+approach.
 
-The median station happened to be on Interstate 80 on the Bay Bridge connecting Oakland and
-San Francisco, between the toll booth and Yerba Buena Island.
-
-This paper addresses that problem
-directly
-by examining massive amounts of data to incorporate 
-
-The CalTrans PEMS database contains terabytes of historical traffic sensor
-data. Most academic analyses focus on small areas for small time periods.
-This paper demonstrates how to compose and integrate powerful
-data processing technologies to create a scalable solution that allows us
-to apply essentially any analysis we like.
-
-explores clustering techniques based on distances between
-functions.
-
-We use this to build data driven models of the fundamental diagram as a
-function, and compute distances between them based on distances calculated
-with the inner product between functions. The fundamental diagrams group
-into those showing high and low flows. (TODO: how high?)
-
-
-We combined the Apache Hive database with the R programming language to
-efficiently process hundreds of billions of data points.
-
-Contributions of this paper:
-
-- Demonstrate scalable and efficient computational techniques
-- Discover the PEMS sensor stations cluster into naturally occuring groups with high
-  and low flow 
+Estimating the fundamental diagram in one location can be thought of as a
+massive data reduction, because it summarizes millions of observations
+into a concise functional parameterization. The details for these
+parameterizations can be found in the section on _Data Analysis_.
+Then we use the estimated fundamental diagrams as an input to a distance based
+clustering in the section _Clustering_.
 
 
 ## Literature Review
+
+The CalTrans PEMS database contains terabytes of historical traffic sensor
+data. Most academic analyses of the PEMS data focus on small areas for small time periods.
 
 @li2011fundamental fit a piecewise linear fundamental diagram to 30
 second PEMS data by minimizing the absolute deviation from the observed
@@ -67,7 +59,7 @@ data points to the fundamental diagram. This inspired the robust regression
 presented here.
 
 @qu2015fundamental use weighted least squares to fit
-traffic speed as a function of density. Areas of density with few
+traffic speed as a function of density.  Areas of density with few
 observations get high weights, reducing bias for various models. Our binned
 means technique also addresses the problem of fitting data in regions where
 data points seldom appear.
@@ -88,27 +80,25 @@ We downloaded 10 months of 30 second loop detector data in 2016 from the
 [CalTrans Performance Measurement System](http://pems.dot.ca.gov/) (PEMS)
 http://pems.dot.ca.gov/ website. We chose Caltrans district 3, the San
 Francisco Bay Area, because this area contains many observations of high traffic
-activity.
+activity and it's large enough to motivate the computational techniques.
 
 Each downloaded file represents one day of observations. There are around
-10 million rows and 26 columns per file that take up about 90 - 100 MB each
+10 million rows and 26 columns per file that take up about 100 MB each
 when compressed on disk. Represented in memory as double precision floating
 point numbers each file will occupy about 2 GB of memory. This size becomes
-unwieldy with most programming languages. In total there were 284 files
+unwieldy with most programming languages. In total we considered 284 files
 with 2.6 billion rows and 26 columns for a total of 68 billion data points.
 This will take up 500+ GB if completely loaded into memory. This size
 motivated some new computational techniques.
 
-## Computational Techniques
+## Computation
 
-To analyze this data we need:
+To analyze this data we need a computational approach that scales well. On
+the other hand, we need robust implementations of common statistical
+software and the capability of extending them in a high level language.
 
-- scalability
-- high throughput
-- an efficient interface into a data analysis language
-
-Hive provides all of these things. Scalability and high throughput come
-through Hadoop's map reduce. The POSIX concept of standard input, or
+Hive provides scalability and high throughput using
+Hadoop's map reduce. The POSIX concept of standard input, or
 `stdin`, provides an efficient interface into the R programming langauge.
 
 Hive directly processed the data files produced by PEMS. All we had
@@ -143,6 +133,10 @@ language to express the analytic operations.
 We fit the fundamental diagram modeling vehicle flow per 30 seconds as a
 function of sensor occupancy. We used three different increasingly complex
 piecewise linear functions as shown in figure \ref{med_stn}.
+
+
+The median station happened to be on Interstate 80 on the Bay Bridge connecting Oakland and
+San Francisco, between the toll booth and Yerba Buena Island.
 
 ![The models used to fit the fundamental diagrams.
 \label{med_stn}](../nonparametric/med_stn.pdf)

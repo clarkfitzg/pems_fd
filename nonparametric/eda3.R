@@ -115,6 +115,11 @@ dev.off()
 
 # Plots of the median station
 
+n = sum(medstn$number_observed)
+nhi = sum(medstn[medstn$right_end_occ > 0.18, "number_observed"])
+print(nhi / n)
+print("hi density observations")
+
 pdf("med_stn.pdf", width = 8, height = 4)
 
 par(mfrow = c(1, 3))
