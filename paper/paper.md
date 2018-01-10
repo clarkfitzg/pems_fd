@@ -2,6 +2,8 @@
 title: "PEMS stations fundamental diagrams"
 bibliography: citations.bib
 date: "January 2018"
+output: pdf_document
+geometry: margin=1in
 header-includes:
     - \usepackage{setspace}\doublespacing
 author:
@@ -142,8 +144,10 @@ We fit the fundamental diagram modeling vehicle flow per 30 seconds as a
 function of sensor occupancy. We used three different increasingly complex
 piecewise linear functions as shown in figure \ref{med_stn}.
 
+<!-- No help
 ![The models used to fit the fundamental diagrams.
 \label{med_stn}](../nonparametric/med_stn.pdf)
+-->
 
 
 Before fitting
