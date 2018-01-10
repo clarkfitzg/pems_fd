@@ -114,10 +114,12 @@ parallelism. R lets us express arbitrary analytic operations through R
 functions.
 
 A Hive cluster with only 4 machines was able to completely process the raw
-data in about 12 minutes. In contrast, a naive approach can easily require
+data in about 12 minutes. In contrast, a naive approach may require
 more complex code while also taking days to run. This speed comes from
 several sources. Hive can load the tables directly from Hadoop File System
-(HDFS) with no overhead because it uses _schema on read_.  Hadoop's
+(HDFS) with no overhead because it uses _schema on read_. This means that
+it doesn't validate or transform the data when it's loaded into the
+database; instead it effectively references the raw text files. Hadoop's
 parallelism lets us fully utilize the physical hardware. R's single
 threaded vectorized model is reasonably efficient when combined with this
 parallelism.
@@ -145,6 +147,9 @@ particular station is located on Interstate 80 on the Bay Bridge connecting
 Oakland and San Francisco, between the toll booth and Yerba Buena Island.
 
 ![The models used to fit the fundamental diagrams for one typical station.
+The dashed lines represent the means $\pm 2\sigma$, where $\sigma$ is the
+standard deviation in each bin. About 95% of the observations lie within
+the dashed lines.
 \label{med_stn}](../nonparametric/med_stn.pdf)
 
 The first method used robust regression to fit curves on the left and right
@@ -234,8 +239,11 @@ $$
 We only considered piecewise linear functions, so all of these expressions
 have closed analytic forms that can be quickly computed.
 
-The distance matrix to input into the Partitioning Around Medoids (PAM)
-algorithm. Inspection of the silhouette plots provided some evidence for
+The distance matrix provided the input into the Partitioning Around Medoids (PAM)
+algorithm. It is important here to use a partitioning method that accepts
+a distance matrix, because this allows us to cluster the functions
+themselves, which are not points in euclidean space.
+Inspection of the silhouette plots provided some evidence for
 clustering the fundamental diagrams into $k = 2$ groups. Silhouette plots
 for larger values of $k$ provided no evidence that there should be more
 groups.
