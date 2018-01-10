@@ -13,14 +13,14 @@ institute:
     - Statistics Department, UC Davis
     - Civil Engineering Department, UC Davis
 abstract:
-    "This paper analyzes several hundred GB of loop detector data from the
+    "This paper analyzes several hundred GB of highway loop detector data from the
 California Department of Transportation Performance Management System
 (PEMS). We use the data to estimate the fundamental diagram of traffic flow
 as a function of density and then perform clustering on the sensor
-locations. The clusters reveal a dominant group of fundamental diagrams
-with normal flow and a smaller group with lesser flow. We demonstrate
-efficient computational techniques to process data both in and out of main
-memory."
+locations based on a distance metric between functions. The clusters reveal
+a dominant group of fundamental diagrams with normal flow and a smaller
+group with lower flow. We demonstrate efficient computational techniques to
+process data both in and out of main memory."
 
 ---
 
@@ -272,25 +272,24 @@ sensors likely caused many of these anomalies.
 
 Figure \ref{high_flows} shows that the two clusters have different rates of
 maximal flow. The maximum flow in the dominant cluster 1 is around 2000
-vehicles per hour, while the max flow in cluster 2 is much lower.
+vehicles per hour, while the max flow in cluster 2 is much lower. Then we
+can answer the motivating question and conclude that the fundamental
+diagrams found in data naturally fall into groups with high and low
+flow. Furthermore, nonparametric models look quite similar to the
+triangular fundamental diagram.
 
+This paper demonstrated a technique for efficiently combining existing data
+analysis technologies to analyze data that will not fit in memory.
+Processing the entire data set allows us to go beyond a simple parametric
+fundamental diagram to a nonparametric model based on dynamically binned
+means. This allows us to more accurately estimate the function and then
+compare thousands of sensor locations across the Bay Area.
 
-### Further Work
-
-We could consider all lanes on the freeway, rather than just the second
-lane as we did here. This would produce a more complete picture of the
-traffic patterns.
-
-We could join the PEMS data with data on historical weather and sunrise /
-sunset times to understand how changes in weather and light conditions
-influence the fundamental diagram.
-
-## Conclusion
-
-Hive lets us do many high level operations with SQL.
-The computational techniques are valuable because they allow the user to
-express possibly complex statistical techniques in the familiar high level R language.
-It's possible to write the entire analysis in map reduce and run it
-natively in Hive, but this would be far more work.
+To extend this analysis, we could consider all lanes on the freeway, rather
+than just the second lane. This would produce a more
+complete picture of the traffic patterns.  We could also join the PEMS data
+with data on historical weather and sunrise / sunset times to understand
+how changes in weather and light conditions influence the fundamental
+diagram.
 
 # References
