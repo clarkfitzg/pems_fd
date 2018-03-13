@@ -54,6 +54,11 @@ fd_shape = by(data = pems[, c("station", "flow2", "occupancy2")]
               , FUN = npbin
               )
 
+# Here's dplyr
+pems2 = select(pems, station, flow2, occupancy2)
+groups = group_by(pems2, station)
+do(groups, npbin(.))
+
 # Given the code and whatever information about the input_table we need,
 # ie. column names and classes, the code analysis needs to infer the
 # following things:
