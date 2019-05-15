@@ -44,7 +44,7 @@ x = data.frame(occupancy2 = runif(n), flow2 = rpois(n, 1))
 x$station = 1L
 
 # About 16 MB for 1 group
-print(object.size(x), units = "MB")
+os1 = object.size(x)
 
 # Takes about 0.26 seconds to compute one group
 t1 = system.time(result <- npbin(x))["elapsed"]
@@ -53,6 +53,10 @@ t1 = system.time(result <- npbin(x))["elapsed"]
 ngroups = 3000
 total_comp_time = t1 * ngroups
 # 792 seconds of actual compute time.
+
+total_data_size = os1 * ngroups
+print(total_data_size, units = "GB")
+# ~ 45 GB in memory
 
 w = 64
 lower_bound_parallel = total_comp_time / w
